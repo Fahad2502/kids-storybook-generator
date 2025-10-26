@@ -1,0 +1,11 @@
+fastapi~=0.119.1
+uvicorn
+python-dotenv~=1.1.1
+google-generativeai # Use this instead of the long google-api-python-client list
+passlib[bcrypt]~=1.7.4
+python-jose[cryptography]
+pydantic~=2.12.3
+pydantic-settings~=2.11.0
+
+
+

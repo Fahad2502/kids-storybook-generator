@@ -1,0 +1,405 @@
+
+
+/* --- Base & Body Styles --- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+    color: #2d1a47;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* --- Keyframe for floating bubbles --- */
+@keyframes floatBubble {
+    0% { transform: translateY(0) scale(0.3); opacity: 0; }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.7; }
+    100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+}
+
+/* --- Bubble Container & Styles --- */
+.magic-sparkles {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    overflow: hidden; pointer-events: none;
+}
+.sparkle {
+    position: absolute; bottom: -50px; background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%; animation: floatBubble 15s linear infinite;
+    box-shadow: 0 0 15px rgba(255,255,255,0.4);
+}
+.sparkle:nth-child(1) { left: 10%; width: 50px; height: 50px; animation-duration: 18s; animation-delay: 0s; }
+.sparkle:nth-child(2) { left: 20%; width: 30px; height: 30px; animation-duration: 12s; animation-delay: 1s; }
+.sparkle:nth-child(3) { left: 30%; width: 60px; height: 60px; animation-duration: 15s; animation-delay: 2s; }
+.sparkle:nth-child(4) { left: 40%; width: 35px; height: 35px; animation-duration: 20s; animation-delay: 3s; }
+.sparkle:nth-child(5) { left: 50%; width: 45px; height: 45px; animation-duration: 16s; animation-delay: 0s; }
+.sparkle:nth-child(6) { left: 60%; width: 55px; height: 55px; animation-duration: 19s; animation-delay: 5s; }
+.sparkle:nth-child(7) { left: 70%; width: 40px; height: 40px; animation-duration: 13s; animation-delay: 2s; }
+.sparkle:nth-child(8) { left: 80%; width: 30px; height: 30px; animation-duration: 17s; animation-delay: 4s; }
+.sparkle:nth-child(9) { left: 90%; width: 50px; height: 50px; animation-duration: 15s; animation-delay: 1s; }
+.sparkle:nth-child(10) { left: 95%; width: 35px; height: 35px; animation-duration: 18s; animation-delay: 3s; }
+
+/* --- Other Animations --- */
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+@keyframes pulse { 0% { transform: scale(1); box-shadow: 0 10px 40px -10px rgba(168, 85, 247, 0.4); } 50% { transform: scale(1.03); box-shadow: 0 15px 50px -10px rgba(168, 85, 247, 0.6); } 100% { transform: scale(1); box-shadow: 0 10px 40px -10px rgba(168, 85, 247, 0.4); } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* --- Header Styles --- */
+header {
+    position: fixed; top: 0; left: 0; right: 0; background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px); border-bottom: 1px solid #e0e0e0; padding: 1rem 2rem; z-index: 1000;
+}
+.header-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo-section { display: flex; align-items: center; gap: 0.75rem; }
+.logo { width: 40px; height: 40px; background: linear-gradient(135deg, #a855f7, #ec4899); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; }
+.site-title { font-size: 1.5rem; font-weight: bold; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+nav { display: flex; gap: 2rem; align-items: center; }
+nav a { color: #2d1a47; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+nav a:hover { color: #a855f7; }
+.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #2d1a47; }
+
+/* --- Button Styles --- */
+.btn { padding: 0.75rem 1.5rem; border-radius: 1rem; font-weight: 600; text-decoration: none; transition: all 0.3s; border: none; cursor: pointer; font-size: 1rem; position: relative; }
+.btn-primary { background: linear-gradient(135deg, #a855f7, #ec4899); color: white; box-shadow: 0 10px 40px -10px rgba(168, 85, 247, 0.4); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 50px -10px rgba(168, 85, 247, 0.6); }
+.btn-secondary { background: white; color: #a855f7; border: 2px solid #a855f7; }
+.btn-secondary:hover { background: #f9f5ff; }
+.btn-loading { color: transparent !important; animation: none !important; cursor: not-allowed; }
+.btn-loading::after { content: ''; position: absolute; left: 50%; top: 50%; margin-left: -12px; margin-top: -12px; width: 24px; height: 24px; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.2); border-top-color: #ffffff; animation: spin 0.8s linear infinite; }
+/* Style for the Logout button */
+.btn-logout {
+    margin-left: 10px;
+    padding: 0.3rem 0.8rem; /* Smaller padding */
+    font-size: 0.9rem;      /* Smaller font */
+    background: #e0e0e0;    /* Light gray background */
+    color: #555;           /* Darker text */
+    border: none;
+    border-radius: 8px;    /* Slightly less rounded */
+    box-shadow: none;       /* No shadow */
+}
+.btn-logout:hover {
+    background: #ccc;
+    color: #333;
+    transform: none; /* No hover movement */
+    box-shadow: none;
+}
+
+/* Adjust the View Favorites button (which uses btn-secondary) */
+#viewFavoritesBtn.btn-secondary {
+    padding: 0.5rem 1rem; /* Adjust padding if needed */
+    font-size: 0.95rem;   /* Adjust font size */
+    border-width: 1px;
+    /* Keep existing colors or adjust */
+    /* background: white; */
+    /* color: #a855f7; */
+    /* border-color: #a855f7; */
+}
+#viewFavoritesBtn.btn-secondary:hover {
+     /* background: #f9f5ff; */ /* Keep existing hover */
+     transform: none; /* Optional: remove hover movement */
+     box-shadow: none; /* Optional: remove hover shadow */
+}
+
+/* Ensure buttons align nicely in the nav */
+#mainNav {
+    display: flex;
+    gap: 1.5rem; /* Adjust gap if needed */
+    align-items: center;
+}
+#userInfo {
+    margin-left: auto; /* Keeps user info to the right */
+    display: flex; /* Align Welcome text and Logout button */
+    align-items: center;
+    gap: 0.5rem; /* Space between Welcome and Logout */
+    font-weight: bold;
+}
+/* --- Hero Section --- */
+.hero { padding: 8rem 2rem 4rem; min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+.hero-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.hero-content h1 { font-size: 3.5rem; font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; background: linear-gradient(135deg, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-content p { font-size: 1.25rem; color: #5a4a6a; margin-bottom: 2rem; }
+.hero-buttons { display: flex; gap: 1rem; }
+.hero-image { position: relative; animation: float 6s ease-in-out infinite; }
+.hero-image img { width: 100%; height: auto; border-radius: 2rem; box-shadow: 0 20px 60px rgba(168, 85, 247, 0.3); }
+
+/* --- Story Creator Section --- */
+.story-creator { padding: 4rem 2rem; background: rgba(255, 255, 255, 0.7); border-radius: 2rem; margin: 2rem; box-shadow: 0 20px 60px -20px rgba(0,0,0,0.15); backdrop-filter: blur(5px); }
+.creator-container { max-width: 800px; margin: 0 auto; }
+.section-header { text-align: center; margin-bottom: 3rem; animation: fadeInUp 0.8s ease-out; }
+.section-header h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; color: #2d1a47; }
+.section-header p { font-size: 1.1rem; color: #5a4a6a; }
+.card { background: white; border-radius: 1.5rem; padding: 2.5rem; box-shadow: 0 10px 40px -10px rgba(168, 85, 247, 0.2); margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.8); animation: fadeInUp 0.8s ease-out 0.2s; animation-fill-mode: backwards; }
+/* --- Frosted Glass effect for Lopaper-texture.jpggin/Register Cards --- */
+#register .card,
+#login .card {
+    background: rgba(255, 255, 255, 0.6); /* Semi-transparent white */
+    backdrop-filter: blur(15px);         /* Apply the blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Optional: Subtle border */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.3); /* Optional: Adjust shadow */
+}
+/* --- Form Styles --- */
+.form-group { margin-bottom: 1.5rem; }
+label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: #2d1a47; font-size: 1.1rem; }
+input, select, textarea { width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 0.75rem; font-size: 1rem; font-family: inherit; transition: all 0.3s; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: #a855f7; box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2); }
+.theme-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1rem; margin-top: 0.5rem; }
+.theme-option { padding: 1.5rem 1rem; border: 2px solid #e0e0e0; border-radius: 1rem; text-align: center; cursor: pointer; transition: all 0.3s ease; background: white; }
+.theme-option .emoji { font-size: 2.5rem; display: block; margin-bottom: 0.75rem; transition: transform 0.3s ease; }
+.theme-option .theme-name { font-weight: 600; color: #5a4a6a; transition: color 0.3s ease; }
+.theme-option:hover { border-color: #a855f7; background: #f9f5ff; transform: translateY(-5px); box-shadow: 0 10px 20px -5px rgba(168, 85, 247, 0.2); }
+.theme-option:hover .emoji { transform: scale(1.2); }
+.theme-option.selected { border-color: #ec4899; background: linear-gradient(135deg, #f9f5ff, #fef5fc); transform: translateY(-5px) scale(1.05); box-shadow: 0 0 20px 5px rgba(236, 72, 153, 0.3); }
+.theme-option.selected .theme-name { color: #ec4899; }
+#storyForm .btn-primary { animation: pulse 2.5s infinite ease-in-out; padding: 1rem; font-size: 1.1rem; }
+
+/* --- Story Result & Actions --- */
+.story-result { background: linear-gradient(145deg, #f9f5ff, #fef5fc); border: 2px solid #e9d5ff; }
+.story-text { font-family: 'Nunito', sans-serif; font-size: 1.5rem; line-height: 1.7; text-align: justify; color: #2d1a47; margin-bottom: 1.5rem; min-height: 150px; white-space: pre-wrap; }
+.story-actions { display: flex; gap: 1rem; opacity: 0; transform: translateY(10px); transition: all 0.5s ease-out 0.2s; }
+.story-actions.is-visible { opacity: 1; transform: translateY(0); }
+
+/* --- Utility --- */
+.hidden { display: none; }
+
+/* --- Footer --- */
+footer { background: #2d1a47; color: white; padding: 3rem 2rem 1rem; margin-top: 4rem; }
+.footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+.footer-section h3 { margin-bottom: 1rem; font-size: 1.2rem; }
+.footer-section ul { list-style: none; }
+.footer-section a { color: #c4b5fd; text-decoration: none; display: block; margin-bottom: 0.5rem; transition: color 0.3s; }
+.footer-section a:hover { color: white; }
+.footer-bottom { text-align: center; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); color: #c4b5fd; }
+
+/* --- Responsive (Mobile) Styles --- */
+@media (max-width: 768px) {
+    nav { display: none; flex-direction: column; position: absolute; top: 73px; left: 0; right: 0; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 1rem 0 1.5rem; gap: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-bottom: 1px solid #e0e0e0; }
+    nav.mobile-active { display: flex; }
+    nav.mobile-active .btn-primary { margin: 0 2rem; }
+    .mobile-menu-btn { display: block; }
+    .hero-container { grid-template-columns: 1fr; text-align: center; gap: 2rem; }
+    .hero-content { order: 2; }
+    .hero-image { order: 1; }
+    .hero-content h1 { font-size: 2.5rem; }
+    .hero-buttons { justify-content: center; }
+    .story-creator { margin: 1rem; padding: 2rem 1rem; }
+    .card { padding: 1.5rem; }
+    .theme-grid { grid-template-columns: repeat(2, 1fr); }
+    .story-actions { flex-direction: column; }
+} /* <<< END OF MEDIA QUERY */
+
+/* === MODAL STYLES (Book Opening Animation) === */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(45, 26, 71, 0.7); backdrop-filter: blur(5px);
+    display: flex; align-items: center; justify-content: center; z-index: 9999;
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease-out;
+    perspective: 1500px;
+}
+.modal-overlay:not(.hidden) { opacity: 1; pointer-events: auto; }
+
+.modal-content {
+    background: transparent; border-radius: 10px; padding: 0; box-shadow: none;
+    width: 90%; max-width: 800px; height: 80vh; max-height: 600px;
+    overflow: hidden; position: relative; display: flex; justify-content: center; align-items: center;
+}
+
+.book-cover {
+    position: absolute;
+    top: 0;
+    width: 50%; /* Each cover takes half the width */
+    height: 100%;
+    background: linear-gradient(135deg, #a855f7, #ec4899); /* Book cover color */
+    box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Exciting springy animation */
+    z-index: 20; /* Ensure covers are on top of content initially */
+    /* display: flex;  <-- REMOVE these lines */
+    /* align-items: center; */
+    /* justify-content: center; */
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    transform-style: preserve-3d;
+    overflow: hidden; /* Hide overflowing pseudo-element content */
+}
+
+/* --- NEW: Add pseudo-element for title --- */
+.book-cover::before {
+    content: attr(data-title); /* Get title from data attribute */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the text */
+    font-size: 1.8rem; /* Adjust size as needed */
+    font-weight: bold;
+    text-align: center;
+    padding: 1rem;
+    width: 80%; /* Limit width of text area */
+    line-height: 1.3;
+    /* Apply styles only when closed (opacity 1 by default) */
+    transition: opacity 0.3s ease-out; /* Fade out when opening */
+}
+
+.left-cover {
+    left: 0;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    transform-origin: right center; /* Hinge on the right edge */
+    transform: rotateY(0deg); /* Start closed */
+}
+
+.right-cover {
+    right: 0;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    transform-origin: left center; /* Hinge on the left edge */
+    transform: rotateY(0deg); /* Start closed */
+}
+
+/* --- When modal is NOT hidden, open covers AND hide title --- */
+.modal-overlay:not(.hidden) .left-cover {
+    transform: rotateY(-170deg);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+.modal-overlay:not(.hidden) .right-cover {
+    transform: rotateY(170deg);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+
+/* --- NEW: Hide title text when covers open --- */
+.modal-overlay:not(.hidden) .book-cover::before {
+    opacity: 0; /* Fade out title */
+}
+/* === Character Styles === */
+.character-container {
+    position: fixed; /* Keep it fixed on screen */
+    bottom: 20px;    /* Distance from bottom */
+    right: 20px;     /* Distance from right */
+    display: flex;
+    align-items: flex-end; /* Align bubble bottom with image bottom */
+    z-index: 1500; /* Above most content but below modal */
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+    opacity: 1;
+    transform: translateY(0); /* Start visible and in position */
+    pointer-events: none; /* Allow clicks to pass through initially */
+}
+
+/* Style for when hidden */
+.character-container.hidden {
+    opacity: 0;
+    transform: translateY(120px); /* Slide down further when hidden */
+}
+
+.character-image {
+    width: 120px; /* Adjust size as needed */
+    height: auto;
+    display: block; /* Remove extra space below image */
+    transform: scaleX(-1); /* Optional: Flip image if it faces the wrong way */
+}
+
+.speech-bubble {
+    background-color: white;
+    padding: 15px 20px;
+    border-radius: 15px;
+    margin-right: -15px; /* Overlap the character slightly */
+    margin-bottom: 20px; /* Position above the branch */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    position: relative; /* Needed for the "tail" */
+    max-width: 250px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    color: #333;
+    pointer-events: auto; /* Allow interaction with bubble if needed later */
+}
+
+/* Speech bubble tail */
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    right: -10px; /* Position tail towards the character */
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid white; /* Pointing right towards owl */
+}
+
+.book-content-wrapper {
+    /* --- CHANGE BACKGROUND, ENSURE NO BORDER --- */
+    background: #f5f1e8 url('../img/paper-texture.jpg'); /* Light parchment + texture */
+    /* border: none; */ /* Make sure there's no border */
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05), 0 8px 25px rgba(0,0,0,0.15); /* Slightly stronger shadow */
+    /* --- End changes --- */
+
+    border-radius: 8px;
+    padding: 2.5rem;
+    width: 95%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-y: auto;
+    position: relative;
+    z-index: 15;
+
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 0.5s ease-out 0.4s, transform 0.5s ease-out 0.4s;
+}
+/* --- Utility class to explicitly hide sections --- */
+.section-hidden {
+    display: none !important;
+}
+.modal-overlay:not(.hidden) .book-content-wrapper { opacity: 1; transform: scale(1); }
+
+.modal-close-btn {
+    position: absolute; top: 15px; right: 20px; background: none; border: none;
+    font-size: 2.5rem; color: white; cursor: pointer; z-index: 25; transition: color 0.3s;
+}
+.modal-overlay:not(.hidden) .modal-close-btn { color: #888; right: 15px; }
+
+#modalStoryTitle { margin-bottom: 1rem; color: #2d1a47; text-align: center; width: 100%; }
+
+#modalStoryText {
+    font-family: 'Nunito', sans-serif; font-size: 1.3rem; line-height: 1.7;
+    color: #2d1a47; text-align: justify; margin-bottom: 0; min-height: auto; flex-grow: 1;
+}
+
+/* --- ADDED DROP CAP --- */
+#modalStoryText::first-letter {
+    font-size: 3em;
+    font-weight: bold;
+    float: left;
+    margin-right: 0.1em;
+    line-height: 0.8;
+    color: #a855f7;
+}
+/* --- End Drop Cap --- */
+
+/* --- Mobile Responsiveness for Modal --- */
+@media (max-width: 600px) {
+    .modal-content { max-width: 95%; height: 90vh; max-height: 90vh; }
+    .book-cover { font-size: 1.8rem; }
+    .book-content-wrapper { padding: 1.5rem; }
+    #modalStoryText { font-size: 1.1rem; }
+    #modalStoryText::first-letter { font-size: 2.5em; } /* Slightly smaller drop cap on mobile */
+    .modal-close-btn { font-size: 2rem; top: 8px; right: 10px; }
+}
+/* === Registration/Login Messages === */
+#registerMessage.success, #loginMessage.success {
+    color: #16a34a; /* Green for success */
+}
+
+#registerMessage.error, #loginMessage.error {
+    color: #dc2626; /* Red for error */
+}
+/* === END MODAL STYLES === */
