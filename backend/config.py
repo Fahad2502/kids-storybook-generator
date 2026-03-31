@@ -29,6 +29,11 @@ IMAGE_MODE: str = os.getenv("IMAGE_MODE", "infip").lower()
 HUGGINGFACE_API_KEY: str = os.getenv("HUGGINGFACE_API_KEY", "")
 INFIP_API_KEY:       str = os.getenv("INFIP_API_KEY", "")
 
+# Cloudinary — permanent image storage
+CLOUDINARY_CLOUD_NAME: str = os.getenv("CLOUDINARY_CLOUD_NAME", "")
+CLOUDINARY_API_KEY:    str = os.getenv("CLOUDINARY_API_KEY", "")
+CLOUDINARY_API_SECRET: str = os.getenv("CLOUDINARY_API_SECRET", "")
+
 # Multiple Gradio spaces — rotated in order, falls back to next if one fails
 # Note: free spaces have GPU quotas that reset hourly — rotation helps spread load
 GRADIO_SPACES: list = [
