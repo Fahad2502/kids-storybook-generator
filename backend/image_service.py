@@ -111,7 +111,7 @@ async def _generate_infip(prompt: str) -> tuple[str, str]:
         raise HTTPException(status_code=500,
                             detail="INFIP_API_KEY not set in .env")
     print("Infip request...")
-    async with httpx.AsyncClient(timeout=30) as client:
+    async with httpx.AsyncClient(timeout=60) as client:
         r = await client.post(
             "https://api.infip.pro/v1/images/generations",
             headers={"Authorization": f"Bearer {INFIP_API_KEY}",

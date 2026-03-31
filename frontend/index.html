@@ -682,12 +682,12 @@
                 <div style="background: rgba(139,110,234,0.2); border-radius: 14px; padding: 24px; border: 1px solid rgba(167,139,250,0.3);">
                     <div style="font-size: 2rem; margin-bottom: 12px;">🎨</div>
                     <h4 style="color: #e9d5ff; margin-bottom: 8px; font-size: 1.1rem;">Image Generation</h4>
-                    <p style="color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.7;">Each page gets a unique illustration using FLUX.1-schnell via HuggingFace Gradio spaces. Scene prompts are extracted per page using a lightweight 8B model.</p>
+                    <p style="color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.7;">Each page gets a unique illustration using FLUX.1 image models. Scene prompts are extracted per page using a lightweight 8B model. Images are stored permanently via Cloudinary.</p>
                 </div>
                 <div style="background: rgba(139,110,234,0.2); border-radius: 14px; padding: 24px; border: 1px solid rgba(167,139,250,0.3);">
                     <div style="font-size: 2rem; margin-bottom: 12px;">🔬</div>
                     <h4 style="color: #e9d5ff; margin-bottom: 8px; font-size: 1.1rem;">Fine-tuned Model</h4>
-                    <p style="color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.7;">We fine-tuned GPT-2 on the TinyStories dataset (2.1M children's stories). Our model achieved a perplexity of 4.81 — a 7–10× improvement over the base model.</p>
+                    <p style="color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.7;">We fine-tuned GPT-2 on 50,000 children's stories from the TinyStories dataset. Our model achieved perplexity of 3.68 vs base GPT-2's 10.44 — a 2.8× improvement in children's story generation.</p>
                 </div>
             </div>
         </div>
@@ -713,12 +713,12 @@
                 </div>
                 <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
                     <div style="font-size: 1.8rem; margin-bottom: 8px;">🖼️</div>
-                    <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">FLUX.1-schnell</div>
-                    <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">Image generation</div>
+                    <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">FLUX.1 + Cloudinary</div>
+                    <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">Image generation &amp; storage</div>
                 </div>
                 <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
                     <div style="font-size: 1.8rem; margin-bottom: 8px;">🗄️</div>
-                    <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">SQLite</div>
+                    <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">SQLite / PostgreSQL</div>
                     <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">Story database</div>
                 </div>
                 <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
@@ -824,6 +824,6 @@
         </div>
     </div>
 
-    <script src="js/script.js?v=TTS_V69"></script>
+    <script src="js/script.js?v=TTS_V70"></script>
 </body>
 </html>
