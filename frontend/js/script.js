@@ -422,8 +422,7 @@ function selectTheme(element) {
 function validateProfessionalForm() {
     const name = document.getElementById('characterName').value.trim();
     const submitBtn = document.getElementById('submitBtn');
-    
-    // Check if custom theme is selected and has value
+
     let themeValid = false;
     if (professionalSelectedTheme === 'custom') {
         const customTheme = document.getElementById('customTheme');
@@ -431,17 +430,17 @@ function validateProfessionalForm() {
     } else {
         themeValid = professionalSelectedTheme !== null;
     }
-    
+
+    const isValid = name && selectedAge && themeValid;
+
     if (submitBtn) {
-        if (name && selectedAge && themeValid) {
-            submitBtn.disabled = false;
-            submitBtn.style.background = 'linear-gradient(135deg, #8b6eea 0%, #9d5fb8 100%)';
-            submitBtn.style.cursor = 'pointer';
-        } else {
-            submitBtn.disabled = true;
-            submitBtn.style.background = '#cbd5e1';
-            submitBtn.style.cursor = 'not-allowed';
-        }
+        // Keep visual disabled state but never set disabled=true so clicks still register
+        submitBtn.style.background = isValid
+            ? 'linear-gradient(135deg, #8b6eea 0%, #9d5fb8 100%)'
+            : '#cbd5e1';
+        submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+        submitBtn.style.opacity = isValid ? '1' : '0.7';
+        submitBtn.dataset.valid = isValid ? 'true' : 'false';
     }
 }
 
@@ -585,6 +584,16 @@ document.addEventListener('DOMContentLoaded', function() {
 async function handleStoryGeneration(e) {
     e.preventDefault();
     console.log('📝 Story generation started');
+
+    // Check if form is valid (we removed disabled so need to check here)
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    if (submitBtn && submitBtn.dataset.valid !== 'true') {
+        const name = document.getElementById('characterName').value.trim();
+        if (!name) { showToast('Enter a character name first', 'warning'); return; }
+        if (!selectedAge) { showToast('Select an age', 'warning'); return; }
+        showToast('Select a theme to continue', 'warning');
+        return;
+    }
 
     if (window.isOffline) {
         showToast('You are offline. Connect to the internet to create stories.', 'warning');
