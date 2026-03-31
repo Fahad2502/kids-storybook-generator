@@ -484,9 +484,11 @@
                         </div>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; padding: 16px 28px; background: linear-gradient(135deg, #8b6eea 0%, #9d5fb8 100%); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: inherit; margin-top: 32px; box-shadow: 0 4px 15px rgba(139,110,234,0.4);">
+                    <div style="position:relative; margin-top: 32px;" onclick="const btn=document.getElementById('submitBtn'); if(btn.disabled){ const n=document.getElementById('characterName').value.trim(); if(!n) showToast('Enter a character name first', 'warning'); else if(!selectedAge) showToast('Select an age', 'warning'); else showToast('Select a theme to continue', 'warning'); }">
+                    <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; padding: 16px 28px; background: linear-gradient(135deg, #8b6eea 0%, #9d5fb8 100%); color: white; border: none; border-radius: 12px; font-size: 17px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-family: inherit; box-shadow: 0 4px 15px rgba(139,110,234,0.4);">
                         Create Story ✨
                     </button>
+                    </div>
                 </form>
             </div>
             
@@ -826,6 +828,6 @@
 
     <div id="toast-container"></div>
 
-    <script src="js/script.js?v=TTS_V71"></script>
+    <script src="js/script.js?v=TTS_V72"></script>
 </body>
 </html>
