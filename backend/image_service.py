@@ -18,6 +18,7 @@ from backend.config import (
     CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET,
     IMAGES_DIR, GRADIO_SPACES,
 )
+from backend.database import save_image_url, get_image_url
 
 # Configure Cloudinary if credentials are set
 if CLOUDINARY_CLOUD_NAME:
@@ -232,13 +233,20 @@ async def generate_image(data: dict) -> dict:
     if not page_text:
         raise HTTPException(status_code=400, detail="No text provided")
 
-    # 1. Disk cache (local dev only)
+    # 1. Check DB cache first (works both locally and on production)
+    if story_id and page_num:
+        cached_url = get_image_url(story_id, page_num)
+        if cached_url:
+            print(f"DB cache hit: story {story_id} page {page_num}")
+            return {"image": cached_url, "scene_prompt": "cached", "cached": True}
+
+    # 2. Check local disk cache (fallback for older stories)
     if story_id and page_num and IMAGES_DIR.exists():
         for ext in ("webp", "png", "jpg"):
             cached = IMAGES_DIR / f"{story_id}_page_{page_num}.{ext}"
             if cached.exists():
                 img_b64 = base64.b64encode(cached.read_bytes()).decode("utf-8")
-                print(f"Cache hit: story {story_id} page {page_num}")
+                print(f"Disk cache hit: story {story_id} page {page_num}")
                 return {"image": f"data:image/{ext};base64,{img_b64}",
                         "scene_prompt": "cached", "cached": True}
 
@@ -260,23 +268,24 @@ async def generate_image(data: dict) -> dict:
         raise HTTPException(status_code=500,
                             detail=f"Unknown IMAGE_MODE '{IMAGE_MODE}'")
 
-    # 4. Upload to Cloudinary for permanent storage
+    # 4. Upload to Cloudinary for permanent storage, then save URL to DB
     if result_type == "url":
-        # infip returns a URL -- upload it to Cloudinary
         permanent = await _upload_to_cloudinary(result, story_id, page_num)
+        if story_id and page_num:
+            save_image_url(story_id, page_num, permanent)
         return {"image": permanent, "scene_prompt": scene,
                 "backend": IMAGE_MODE, "cached": False}
     else:
-        # gradio/inference returns base64 -- upload data URI to Cloudinary
         img_b64 = result
         img_ext = result_type
         data_uri = f"data:image/{img_ext};base64,{img_b64}"
         permanent = await _upload_to_cloudinary(data_uri, story_id, page_num)
         if permanent != data_uri:
-            # Successfully uploaded to Cloudinary
+            if story_id and page_num:
+                save_image_url(story_id, page_num, permanent)
             return {"image": permanent, "scene_prompt": scene,
                     "backend": IMAGE_MODE, "cached": False}
-        # Cloudinary not configured -- save locally or return base64
+        # No Cloudinary -- save locally
         try:
             if story_id and page_num:
                 save_path = IMAGES_DIR / f"{story_id}_page_{page_num}.{img_ext}"
