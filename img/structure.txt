@@ -1,0 +1,14 @@
+backend/
+  __init__.py
+  config.py          ← env vars, Groq client, paths
+  database.py        ← init_database(), get_conn(), save_story()
+  models.py          ← Pydantic models
+  templates.py       ← STORY_TEMPLATES data (pure data, no logic)
+  story_service.py   ← generate_free_story(), generate_ai_story()
+  image_service.py   ← generate_image(), cache logic, all 3 backends
+  routes/
+    __init__.py
+    misc.py          ← /, /api, /stats, /groq-quota
+    stories.py       ← all /stories and /favorites CRUD
+    images.py        ← /generate-image, /story-image
+app.py               ← FastAPI wiring, 35 lines total

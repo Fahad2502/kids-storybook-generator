@@ -1,0 +1,36 @@
+# Environment & secrets
+.env
+*.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# Database (local only)
+stories.db
+*.db
+
+# Generated images (stored in cloud on production)
+frontend/img/generated/*.jpg
+frontend/img/generated/*.png
+frontend/img/generated/*.webp
+
+# Model files (too large for GitHub)
+tinystories-gpt2-final/model.safetensors
+tinystories-gpt2-final/checkpoint-*/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

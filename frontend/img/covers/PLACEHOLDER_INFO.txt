@@ -1,0 +1,29 @@
+📚 COVER IMAGES FOLDER
+
+This folder should contain 12 cover images (2 per theme):
+
+✅ Required Files:
+- adventure-1.jpg
+- adventure-2.jpg
+- fantasy-1.jpg
+- fantasy-2.jpg
+- friendship-1.jpg
+- friendship-2.jpg
+- animals-1.jpg
+- animals-2.jpg
+- space-1.jpg
+- space-2.jpg
+- ocean-1.jpg
+- ocean-2.jpg
+
+📐 Specifications:
+- Size: 800x1000 pixels (portrait)
+- Format: JPG or PNG
+- File size: Under 500KB
+- Style: Colorful, kid-friendly
+
+🧪 Testing:
+Open test_book_ui.html and use the "Test Cover Images" buttons to see your covers!
+
+💡 Until you add images:
+The system will use beautiful gradient backgrounds as fallback.

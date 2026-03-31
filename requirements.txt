@@ -1,11 +1,10 @@
-fastapi~=0.119.1
-uvicorn
-python-dotenv~=1.1.1
-google-generativeai # Use this instead of the long google-api-python-client list
-passlib[bcrypt]~=1.7.4
-python-jose[cryptography]
-pydantic~=2.12.3
-pydantic-settings~=2.11.0
-
-
-
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+python-dotenv>=1.0.0
+requests>=2.30.0
+httpx>=0.24.0
+groq>=0.4.0
+gradio_client>=0.7.0
+psycopg2-binary>=2.9.0
+cloudinary>=1.36.0
+Pillow>=9.0.0
