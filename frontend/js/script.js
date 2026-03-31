@@ -1,6 +1,21 @@
 // API Base URL - adjust this to match your backend
 const API_BASE_URL = 'http://localhost:8025';
 
+// ── Toast notifications ───────────────────────────────────────────────────────
+function showToast(message, type = 'info', duration = 3500) {
+    const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-msg">${message}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+        toast.classList.add('toast-out');
+        setTimeout(() => toast.remove(), 280);
+    }, duration);
+}
+
 // Global variables
 let selectedTheme = '';
 let currentStory = null;
@@ -173,6 +188,9 @@ function showSection(sectionId) {
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
         targetSection.classList.remove('section-hidden');
+        targetSection.classList.remove('section-fade');
+        void targetSection.offsetWidth; // force reflow
+        targetSection.classList.add('section-fade');
         console.log('  ✅ Showing section:', sectionId);
         
         // Scroll to top of the section
@@ -569,7 +587,7 @@ async function handleStoryGeneration(e) {
     console.log('📝 Story generation started');
 
     if (window.isOffline) {
-        alert('📴 You are offline. Please connect to the internet to create new stories.');
+        showToast('You are offline. Connect to the internet to create stories.', 'warning');
         return;
     }
     
@@ -585,7 +603,7 @@ async function handleStoryGeneration(e) {
         console.log('📋 Form data:', { name, age, theme });
         
         if (!name || !age || !theme) {
-            alert('Please fill in all fields and select a theme.');
+            showToast('Please fill in all fields and select a theme.', 'warning');
             return;
         }
         
@@ -595,7 +613,7 @@ async function handleStoryGeneration(e) {
         if (theme === 'custom') {
             const customTheme = document.getElementById('customTheme').value.trim();
             if (!customTheme) {
-                alert('Please enter a custom theme.');
+                showToast('Please enter a custom theme name.', 'warning');
                 return;
             }
             isCustomTheme = true;
@@ -684,6 +702,7 @@ async function handleStoryGeneration(e) {
         console.log('✅ Story generated:', storyData);
         console.log('📌 Full response data:', JSON.stringify(storyData, null, 2));
         currentStory = storyData;
+        showToast(`"${storyData.title}" is ready!`, 'success');
         
         // Add custom cover number to story data BEFORE saving
         if (window.isCustomTheme && window.customCoverNumber) {
@@ -706,7 +725,7 @@ async function handleStoryGeneration(e) {
         } else {
             console.error('❌ ERROR: No story_id in response!');
             console.error('❌ Response keys:', Object.keys(storyData));
-            alert('Warning: Story was not saved properly. Please check server logs.');
+            showToast('Story may not have saved properly.', 'warning');
         }
         
         // Display the story in the full storyView page
@@ -745,7 +764,7 @@ async function handleStoryGeneration(e) {
             errorMessage = error.message;
         }
         
-        alert(`Error generating story: ${errorMessage}`);
+        showToast('Error: ' + errorMessage, 'error', 5000);
         hideCharacterMessage();
     } finally {
         // Reset button state
@@ -1327,6 +1346,23 @@ function openPictureBook() {
 // Load recent stories
 async function loadRecentStories() {
     console.log('📚 Loading recent stories from:', `${API_BASE_URL}/stories`);
+
+    // Show skeleton loaders while fetching
+    const storiesList = document.getElementById('recent-stories-list');
+    if (storiesList) {
+        storiesList.innerHTML = Array(6).fill(0).map(() => `
+            <div class="skeleton-card">
+                <div class="skeleton" style="height:140px; border-radius:10px;"></div>
+                <div class="skeleton" style="height:18px; width:70%;"></div>
+                <div class="skeleton" style="height:14px; width:45%;"></div>
+                <div style="display:flex; gap:8px; margin-top:4px;">
+                    <div class="skeleton" style="height:28px; width:60px; border-radius:20px;"></div>
+                    <div class="skeleton" style="height:28px; width:60px; border-radius:20px;"></div>
+                </div>
+            </div>
+        `).join('');
+    }
+
     try {
         const response = await fetch(`${API_BASE_URL}/stories`);
         console.log('📡 Gallery response status:', response.status);
@@ -1775,7 +1811,7 @@ function toggleMenu() {
 
 // Placeholder functions for features not implemented in backend
 function markAsFavorite(button) {
-    alert('Favorites feature coming soon!');
+    showToast('Favorites coming soon!', 'info');
 }
 
 function shareStory() {
@@ -1790,7 +1826,7 @@ function shareStory() {
         } else {
             // Fallback - copy to clipboard
             navigator.clipboard.writeText(shareText + '\n\n' + window.location.href);
-            alert('Story link copied to clipboard!');
+            showToast('Story link copied!', 'success');
         }
     }
 }
@@ -1922,7 +1958,7 @@ function getCurrentPageText() {
 
 function toggleReadAloud() {
     if (!window.speechSynthesis) {
-        alert('Your browser does not support text-to-speech. Try Chrome or Edge.');
+        showToast('TTS not supported. Try Chrome or Edge.', 'warning');
         return;
     }
     if (ttsActive && !ttsPaused) {
@@ -2647,3 +2683,4 @@ function scrollToHowItWorks() {
         section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
+

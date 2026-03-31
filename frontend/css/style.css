@@ -1119,3 +1119,88 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
         font-size: 3rem;
     }
 }
+
+/* ── Toast Notifications ─────────────────────────────────────────────────── */
+#toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #fff;
+    min-width: 280px;
+    max-width: 380px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    pointer-events: all;
+    animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(10px);
+}
+
+.toast.toast-success { background: rgba(16, 185, 129, 0.92); border: 1px solid rgba(16,185,129,0.4); }
+.toast.toast-error   { background: rgba(239, 68, 68, 0.92);  border: 1px solid rgba(239,68,68,0.4); }
+.toast.toast-info    { background: rgba(99, 102, 241, 0.92); border: 1px solid rgba(99,102,241,0.4); }
+.toast.toast-warning { background: rgba(245, 158, 11, 0.92); border: 1px solid rgba(245,158,11,0.4); }
+
+.toast.toast-out { animation: toastOut 0.25s ease forwards; }
+
+.toast-icon { font-size: 1.2rem; flex-shrink: 0; }
+.toast-msg  { flex: 1; line-height: 1.4; }
+
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(60px) scale(0.9); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+@keyframes toastOut {
+    from { opacity: 1; transform: translateX(0) scale(1); }
+    to   { opacity: 0; transform: translateX(60px) scale(0.9); }
+}
+
+/* ── Skeleton Loaders ────────────────────────────────────────────────────── */
+.skeleton {
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.06) 25%,
+        rgba(255,255,255,0.12) 50%,
+        rgba(255,255,255,0.06) 75%);
+    background-size: 200% 100%;
+    animation: skeletonShimmer 1.4s infinite;
+    border-radius: 8px;
+}
+
+@keyframes skeletonShimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(167,139,250,0.15);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ── Section Fade Transitions ────────────────────────────────────────────── */
+.section-fade {
+    animation: sectionFadeIn 0.35s ease-out;
+}
+
+@keyframes sectionFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
