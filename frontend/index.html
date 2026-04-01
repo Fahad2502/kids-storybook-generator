@@ -187,11 +187,12 @@
                 <a href="#about">About</a>
                 <div id="userInfo" style="margin-left: auto; font-weight: 600; color: #e5f1fb; font-size:0.9rem;"></div>
                 <button onclick="showFavorites()" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 5px; padding: 8px 16px; font-size:0.9rem;"><span>❤️</span><span>Favorites</span></button>
-                <button id="logoutBtn" onclick="handleLogout()" style="display: none; padding: 8px 18px; font-size:0.9rem; font-weight:600; font-family:inherit; border-radius:1rem; border: 2px solid rgba(255,255,255,0.2); background: transparent; color: #e5f1fb; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.borderColor='#06b6d4'; this.style.color='#06b6d4'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.color='#e5f1fb'">Logout</button>
-                <div id="authBtns" style="display:flex; gap:8px; margin-left: auto;">
-                    <button onclick="showSection('auth'); switchAuthTab('login')" style="padding: 8px 20px; font-size:0.9rem; font-weight:600; font-family:inherit; border-radius:1rem; border: 1.5px solid rgba(6,182,212,0.5); background: rgba(6,182,212,0.1); color: #06b6d4; cursor:pointer; transition:all 0.2s;" onmouseover="this.style.background='rgba(6,182,212,0.2)'; this.style.borderColor='#06b6d4'" onmouseout="this.style.background='rgba(6,182,212,0.1)'; this.style.borderColor='rgba(6,182,212,0.5)'">Sign In</button>
-                    <button id="getStartedBtn" onclick="showSection('auth'); switchAuthTab('register')" style="padding: 8px 20px; font-size:0.9rem; font-weight:600; font-family:inherit; border-radius:1rem; border: 1.5px solid transparent; background: linear-gradient(135deg,#06b6d4,#14b8a6); color: #141b2d; cursor:pointer; transition:all 0.2s; box-shadow:0 0 12px rgba(6,182,212,0.25);" onmouseover="this.style.boxShadow='0 0 20px rgba(6,182,212,0.4)'; this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='0 0 12px rgba(6,182,212,0.25)'; this.style.transform='translateY(0)'">Register</button>
-                </div></nav>
+                <button id="logoutBtn" onclick="handleLogout()" style="display:none; padding:8px 18px; font-size:0.9rem; font-weight:600; font-family:inherit; border-radius:1rem; border:1.5px solid rgba(255,255,255,0.2); background:transparent; color:#e5f1fb; cursor:pointer;">Logout</button>
+                <div id="authBtns" style="display:flex; gap:8px;">
+                    <button onclick="showSection('auth'); switchAuthTab('login')" style="padding:8px 20px; font-size:0.9rem; font-weight:600; font-family:inherit; border-radius:1rem; border:1.5px solid rgba(6,182,212,0.5); background:rgba(6,182,212,0.1); color:#06b6d4; cursor:pointer;">Sign In</button>
+                    <button id="getStartedBtn" onclick="showSection('auth'); switchAuthTab('register')" style="padding:8px 20px; font-size:0.9rem; font-weight:600; font-family:inherit; border-radius:1rem; border:none; background:linear-gradient(135deg,#06b6d4,#14b8a6); color:#141b2d; cursor:pointer;">Register</button>
+                </div>
+            </nav>
             <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
         </div>
     </header>
@@ -369,7 +370,7 @@
     </div>
 
 
-    <section class="story-creator section-hidden" id="create">
+    <section class="story-creator" id="create">
         <div class="creator-container">
             <div class="section-header" style="text-align: center; margin-bottom: 48px; animation: slideIn 0.8s ease-out;">
                 <h2 style="font-size: 32px; font-weight: 700; color: #ffffff; margin-bottom: 8px; letter-spacing: -0.02em; text-shadow: 0 2px 10px rgba(0,0,0,0.2);">Create Your Story</h2>
@@ -513,7 +514,7 @@
         </div>
     </section>
 
-    <section class="story-creator section-hidden" id="gallery">
+    <section class="story-creator" id="gallery">
         <div class="creator-container">
             <div class="section-header" style="animation: none;">
                 <h2>Recently Created Stories</h2>
@@ -597,7 +598,7 @@
         </div>
     </section>
 
-    <section class="story-creator section-hidden" id="favorites">
+    <section class="story-creator" id="favorites">
         <div class="creator-container">
             <div class="section-header">
                 <h2>Your Favorite Stories ❤️</h2>
@@ -609,157 +610,95 @@
         </div>
     </section>
 
-    <section class="story-creator section-hidden" id="register">
-        <div style="display:none"></div>
-    </section>
+    <section class="story-creator section-hidden" id="register"><div style="display:none"></div></section>
+    <section class="story-creator section-hidden" id="login"><div style="display:none"></div></section>
 
-    <section class="story-creator section-hidden" id="login">
-        <div style="display:none"></div>
-    </section>
-
-    <!-- ── Professional Auth Page ──────────────────────────────────────── -->
-    <section class="section-hidden auth-page" id="auth" style="min-height:100vh; align-items:center; justify-content:center; padding: 80px 20px 40px;">
-        <div style="width:100%; max-width:440px;">
-
-            <!-- Logo -->
+    <!-- Auth Page -->
+    <section class="section-hidden" id="auth" style="min-height:100vh; align-items:center; justify-content:center; padding:80px 20px 40px;">
+        <div style="width:100%; max-width:440px; margin:0 auto;">
             <div style="text-align:center; margin-bottom:32px;">
                 <div style="width:56px; height:56px; background:linear-gradient(135deg,#06b6d4,#8b5cf6); border-radius:16px; display:inline-flex; align-items:center; justify-content:center; font-size:28px; box-shadow:0 0 30px rgba(6,182,212,0.4); margin-bottom:16px;">✨</div>
                 <h1 style="font-size:1.8rem; font-weight:800; background:linear-gradient(135deg,#06b6d4,#8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:0;">Kids Story</h1>
                 <p style="color:rgba(229,241,251,0.6); font-size:0.9rem; margin-top:6px;">AI-powered personalized stories for children</p>
             </div>
-
-            <!-- Auth Card -->
             <div style="background:rgba(26,32,48,0.85); border:1px solid rgba(6,182,212,0.2); border-radius:24px; padding:36px; backdrop-filter:blur(20px); box-shadow:0 20px 60px rgba(0,0,0,0.4);">
-
-                <!-- Tab switcher -->
+                <!-- Tabs -->
                 <div style="display:flex; background:rgba(0,0,0,0.3); border-radius:12px; padding:4px; margin-bottom:28px;">
                     <button id="tabLogin" onclick="switchAuthTab('login')" style="flex:1; padding:10px; border:none; border-radius:9px; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s; background:linear-gradient(135deg,#06b6d4,#0891b2); color:white; font-family:inherit;">Sign In</button>
                     <button id="tabRegister" onclick="switchAuthTab('register')" style="flex:1; padding:10px; border:none; border-radius:9px; font-weight:700; font-size:0.95rem; cursor:pointer; transition:all 0.2s; background:transparent; color:rgba(229,241,251,0.5); font-family:inherit;">Create Account</button>
                 </div>
-
                 <!-- Login Form -->
                 <form id="loginForm" onsubmit="handleLogin(event)">
-                    <div style="margin-bottom:18px;">
-                        <label style="display:block; font-size:0.85rem; font-weight:600; color:rgba(229,241,251,0.8); margin-bottom:8px; letter-spacing:0.05em; text-transform:uppercase;">Username</label>
-                        <input id="loginUsername" type="text" placeholder="Enter your username" required autocomplete="username"
-                            style="width:100%; padding:13px 16px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:1rem; font-family:inherit; outline:none; transition:all 0.2s; box-sizing:border-box;"
-                            onfocus="this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'"
-                            onblur="this.style.borderColor='rgba(6,182,212,0.25)'; this.style.boxShadow='none'">
-                    </div>
-                    <div style="margin-bottom:24px;">
-                        <label style="display:block; font-size:0.85rem; font-weight:600; color:rgba(229,241,251,0.8); margin-bottom:8px; letter-spacing:0.05em; text-transform:uppercase;">Password</label>
-                        <div style="position:relative;">
-                            <input id="loginPassword" type="password" placeholder="Enter your password" required autocomplete="current-password"
-                                style="width:100%; padding:13px 48px 13px 16px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:1rem; font-family:inherit; outline:none; transition:all 0.2s; box-sizing:border-box;"
-                                onfocus="this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'"
-                                onblur="this.style.borderColor='rgba(6,182,212,0.25)'; this.style.boxShadow='none'">
-                            <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(229,241,251,0.5); cursor:pointer; padding:0; display:flex; align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                        </div>
-                    </div>
-                    <button type="submit" style="width:100%; padding:14px; background:linear-gradient(135deg,#06b6d4,#0891b2); color:white; border:none; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; box-shadow:0 4px 15px rgba(6,182,212,0.3);"
-                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(6,182,212,0.4)'"
-                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(6,182,212,0.3)'">
-                        Sign In →
-                    </button>
-                </form>
-
-                <!-- Register Form (hidden by default) -->
-                <form id="registerForm" onsubmit="handleRegister(event)" style="display:none;">
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:18px;">
-                        <div>
-                            <label style="display:block; font-size:0.8rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase;">First Name</label>
-                            <input id="regFirstName" type="text" placeholder="Ali" required autocomplete="given-name"
-                                style="width:100%; padding:11px 14px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.95rem; font-family:inherit; outline:none; transition:all 0.2s; box-sizing:border-box;"
-                                onfocus="this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'"
-                                onblur="this.style.borderColor='rgba(6,182,212,0.25)'; this.style.boxShadow='none'">
-                        </div>
-                        <div>
-                            <label style="display:block; font-size:0.8rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase;">Last Name</label>
-                            <input id="regLastName" type="text" placeholder="Khan" required autocomplete="family-name"
-                                style="width:100%; padding:11px 14px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.95rem; font-family:inherit; outline:none; transition:all 0.2s; box-sizing:border-box;"
-                                onfocus="this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'"
-                                onblur="this.style.borderColor='rgba(6,182,212,0.25)'; this.style.boxShadow='none'">
-                        </div>
-                    </div>
-                    <div style="margin-bottom:14px;">
-                        <label style="display:block; font-size:0.8rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase;">Email</label>
-                        <input id="regEmail" type="email" placeholder="ali@example.com" required autocomplete="email"
-                            style="width:100%; padding:11px 14px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.95rem; font-family:inherit; outline:none; transition:all 0.2s; box-sizing:border-box;"
-                            onfocus="this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'"
-                            onblur="this.style.borderColor='rgba(6,182,212,0.25)'; this.style.boxShadow='none'">
-                    </div>
-                    <div style="margin-bottom:14px;">
+                    <div style="margin-bottom:16px;">
                         <label style="display:block; font-size:0.8rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase;">Username</label>
-                        <input id="regUsername" type="text" placeholder="ali_khan (letters, numbers, _)" required autocomplete="username"
-                            oninput="validateUsername(this)"
-                            style="width:100%; padding:11px 14px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.95rem; font-family:inherit; outline:none; transition:all 0.2s; box-sizing:border-box;"
-                            onfocus="this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'"
-                            onblur="this.style.borderColor='rgba(6,182,212,0.25)'; this.style.boxShadow='none'">
-                        <div id="usernameHint" style="font-size:0.75rem; margin-top:5px; color:rgba(229,241,251,0.4);">3-20 characters, letters/numbers/underscore only</div>
+                        <input id="loginUsername" type="text" placeholder="Enter your username" required autocomplete="username" style="width:100%; padding:12px 14px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.95rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
                     </div>
-                    <div style="margin-bottom:8px;">
+                    <div style="margin-bottom:22px;">
                         <label style="display:block; font-size:0.8rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:6px; letter-spacing:0.05em; text-transform:uppercase;">Password</label>
                         <div style="position:relative;">
-                            <input id="regPassword" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number" required autocomplete="new-password"
-                                oninput="checkPasswordStrength(this.value)"
-                                style="width:100%; padding:11px 48px 11px 14px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.95rem; font-family:inherit; outline:none; transition:all 0.2s; box-sizing:border-box;"
-                                onfocus="this.style.borderColor='#06b6d4'; this.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'"
-                                onblur="this.style.borderColor='rgba(6,182,212,0.25)'; this.style.boxShadow='none'">
-                            <button type="button" onclick="togglePasswordVisibility('regPassword', this)" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(229,241,251,0.5); cursor:pointer; padding:0; display:flex; align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-                        </div>
-                        <!-- Password strength bar -->
-                        <div style="margin-top:8px;">
-                            <div style="display:flex; gap:4px; margin-bottom:4px;">
-                                <div id="str1" style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.3s;"></div>
-                                <div id="str2" style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.3s;"></div>
-                                <div id="str3" style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.3s;"></div>
-                                <div id="str4" style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.3s;"></div>
-                            </div>
-                            <div id="strLabel" style="font-size:0.72rem; color:rgba(229,241,251,0.4);"></div>
+                            <input id="loginPassword" type="password" placeholder="Enter your password" required autocomplete="current-password" style="width:100%; padding:12px 46px 12px 14px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.95rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                            <button type="button" onclick="togglePasswordVisibility('loginPassword',this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(229,241,251,0.5); cursor:pointer; padding:0; display:flex;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
                         </div>
                     </div>
-                    <button type="submit" style="width:100%; padding:13px; background:linear-gradient(135deg,#8b5cf6,#7c3aed); color:white; border:none; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; box-shadow:0 4px 15px rgba(139,92,246,0.3); margin-top:16px;"
-                        onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(139,92,246,0.4)'"
-                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(139,92,246,0.3)'">
-                        Create Account →
-                    </button>
+                    <button type="submit" style="width:100%; padding:13px; background:linear-gradient(135deg,#06b6d4,#0891b2); color:white; border:none; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; font-family:inherit; box-shadow:0 4px 15px rgba(6,182,212,0.3);">Sign In →</button>
                 </form>
-
-                <!-- Divider -->
-                <div style="display:flex; align-items:center; gap:12px; margin:24px 0;">
+                <!-- Register Form -->
+                <form id="registerForm" onsubmit="handleRegister(event)" style="display:none;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+                        <div>
+                            <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">First Name</label>
+                            <input id="regFirstName" type="text" placeholder="Ali" required style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">Last Name</label>
+                            <input id="regLastName" type="text" placeholder="Khan" required style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                        </div>
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">Email</label>
+                        <input id="regEmail" type="email" placeholder="ali@example.com" required style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                    </div>
+                    <div style="margin-bottom:12px;">
+                        <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">Username</label>
+                        <input id="regUsername" type="text" placeholder="ali_khan" required oninput="validateUsername(this)" style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                        <div id="usernameHint" style="font-size:0.72rem; margin-top:4px; color:rgba(229,241,251,0.4);">3-20 chars, letters/numbers/underscore</div>
+                    </div>
+                    <div style="margin-bottom:8px;">
+                        <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">Password</label>
+                        <div style="position:relative;">
+                            <input id="regPassword" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number" required oninput="checkPasswordStrength(this.value)" style="width:100%; padding:11px 46px 11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                            <button type="button" onclick="togglePasswordVisibility('regPassword',this)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; color:rgba(229,241,251,0.5); cursor:pointer; padding:0; display:flex;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                        </div>
+                        <div style="display:flex; gap:4px; margin-top:8px;">
+                            <div id="str1" style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.3s;"></div>
+                            <div id="str2" style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.3s;"></div>
+                            <div id="str3" style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.3s;"></div>
+                            <div id="str4" style="flex:1; height:3px; border-radius:2px; background:rgba(255,255,255,0.1); transition:background 0.3s;"></div>
+                        </div>
+                        <div id="strLabel" style="font-size:0.72rem; margin-top:4px; color:rgba(229,241,251,0.4);"></div>
+                    </div>
+                    <button type="submit" style="width:100%; padding:13px; background:linear-gradient(135deg,#8b5cf6,#7c3aed); color:white; border:none; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; font-family:inherit; margin-top:14px; box-shadow:0 4px 15px rgba(139,92,246,0.3);">Create Account →</button>
+                </form>
+                <!-- Social -->
+                <div style="display:flex; align-items:center; gap:12px; margin:20px 0 16px;">
                     <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
-                    <span style="color:rgba(229,241,251,0.4); font-size:0.8rem; font-weight:600;">OR CONTINUE WITH</span>
+                    <span style="color:rgba(229,241,251,0.4); font-size:0.75rem; font-weight:600;">OR CONTINUE WITH</span>
                     <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
                 </div>
-
-                <!-- Social buttons -->
-                <div style="display:flex; gap:12px;">
-                    <button onclick="showToast('Google sign-in coming soon!', 'info')" style="flex:1; padding:12px; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.12); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px;"
-                        onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.2)'"
-                        onmouseout="this.style.background='rgba(255,255,255,0.06)'; this.style.borderColor='rgba(255,255,255,0.12)'">
-                        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="showToast('Google sign-in coming soon!','info')" style="flex:1; padding:11px; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.12); border-radius:10px; color:#e5f1fb; font-size:0.88rem; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
                         Google
                     </button>
-                    <button onclick="showToast('GitHub sign-in coming soon!', 'info')" style="flex:1; padding:12px; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.12); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px;"
-                        onmouseover="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.2)'"
-                        onmouseout="this.style.background='rgba(255,255,255,0.06)'; this.style.borderColor='rgba(255,255,255,0.12)'">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="#e5f1fb"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    <button onclick="showToast('GitHub sign-in coming soon!','info')" style="flex:1; padding:11px; background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.12); border-radius:10px; color:#e5f1fb; font-size:0.88rem; font-weight:600; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#e5f1fb"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                         GitHub
                     </button>
                 </div>
-
-                <!-- Footer note -->
-                <p style="text-align:center; color:rgba(229,241,251,0.35); font-size:0.78rem; margin-top:20px; margin-bottom:0;">
-                    By continuing, you agree to our Terms of Service
-                </p>
+                <p style="text-align:center; color:rgba(229,241,251,0.3); font-size:0.75rem; margin-top:16px; margin-bottom:0;">By continuing, you agree to our Terms of Service</p>
             </div>
-
-            <!-- Back to home -->
-            <p style="text-align:center; margin-top:20px;">
-                <a href="#home" onclick="showSection('home'); return false;" style="color:rgba(229,241,251,0.5); font-size:0.85rem; text-decoration:none; transition:color 0.2s;"
-                    onmouseover="this.style.color='#06b6d4'" onmouseout="this.style.color='rgba(229,241,251,0.5)'">
-                    ← Back to home
-                </a>
+            <p style="text-align:center; margin-top:16px;">
+                <a href="#home" onclick="showSection('home'); return false;" style="color:rgba(229,241,251,0.4); font-size:0.82rem; text-decoration:none;">← Back to home</a>
             </p>
         </div>
     </section>
@@ -934,6 +873,6 @@
 
     <div id="toast-container"></div>
 
-    <script src="js/script.js?v=TTS_V81"></script>
+    <script src="js/script.js?v=TTS_V82"></script>
 </body>
 </html>

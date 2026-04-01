@@ -24,156 +24,7 @@ function showToast(message, type = 'info', duration = 3500) {
     }, duration);
 }
 
-// ── Auth helpers ─────────────────────────────────────────────────────────────
-const Auth = {
-    getToken:    ()      => localStorage.getItem('ks_token'),
-    getUsername: ()      => localStorage.getItem('ks_username'),
-    isLoggedIn:  ()      => !!localStorage.getItem('ks_token'),
-    save: (token, username) => {
-        localStorage.setItem('ks_token', token);
-        localStorage.setItem('ks_username', username);
-    },
-    clear: () => {
-        localStorage.removeItem('ks_token');
-        localStorage.removeItem('ks_username');
-    },
-    headers: () => {
-        const t = localStorage.getItem('ks_token');
-        return t ? { 'Content-Type': 'application/json', 'Authorization': `Bearer ${t}` }
-                 : { 'Content-Type': 'application/json' };
-    },
-};
-
-function validateUsername(input) {
-    const val = input.value;
-    const hint = document.getElementById('usernameHint');
-    if (!hint) return;
-    if (val.length === 0) {
-        hint.style.color = 'rgba(229,241,251,0.4)';
-        hint.textContent = '3-20 characters, letters/numbers/underscore only';
-    } else if (!/^[a-zA-Z0-9_]{3,20}$/.test(val)) {
-        hint.style.color = '#f87171';
-        hint.textContent = val.length < 3 ? 'Too short' : val.length > 20 ? 'Too long' : 'Only letters, numbers, underscore allowed';
-        input.style.borderColor = '#f87171';
-    } else {
-        hint.style.color = '#34d399';
-        hint.textContent = '✓ Username looks good';
-        input.style.borderColor = '#34d399';
-    }
-}
-
-function checkPasswordStrength(pwd) {
-    const bars  = [document.getElementById('str1'), document.getElementById('str2'), document.getElementById('str3'), document.getElementById('str4')];
-    const label = document.getElementById('strLabel');
-    if (!bars[0] || !label) return;
-
-    let score = 0;
-    if (pwd.length >= 8)              score++;
-    if (/[A-Z]/.test(pwd))            score++;
-    if (/[0-9]/.test(pwd))            score++;
-    if (/[^A-Za-z0-9]/.test(pwd))     score++;
-
-    const colors = ['#f87171', '#fb923c', '#fbbf24', '#34d399'];
-    const labels = ['Weak', 'Fair', 'Good', 'Strong'];
-    bars.forEach((b, i) => {
-        b.style.background = i < score ? colors[score - 1] : 'rgba(255,255,255,0.1)';
-    });
-    label.textContent = pwd.length > 0 ? labels[score - 1] || '' : '';
-    label.style.color = score > 0 ? colors[score - 1] : 'rgba(229,241,251,0.4)';
-}
-    const loginForm    = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const tabLogin     = document.getElementById('tabLogin');
-    const tabRegister  = document.getElementById('tabRegister');
-    if (tab === 'login') {
-        loginForm.style.display    = 'block';
-        registerForm.style.display = 'none';
-        tabLogin.style.background    = 'linear-gradient(135deg,#06b6d4,#0891b2)';
-        tabLogin.style.color         = 'white';
-        tabRegister.style.background = 'transparent';
-        tabRegister.style.color      = 'rgba(229,241,251,0.5)';
-    } else {
-        loginForm.style.display    = 'none';
-        registerForm.style.display = 'block';
-        tabRegister.style.background = 'linear-gradient(135deg,#8b5cf6,#7c3aed)';
-        tabRegister.style.color      = 'white';
-        tabLogin.style.background    = 'transparent';
-        tabLogin.style.color         = 'rgba(229,241,251,0.5)';
-    }
-}
-
-function togglePasswordVisibility(inputId, btn) {
-    const input = document.getElementById(inputId);
-    const eyeOpen  = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
-    const eyeClosed = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
-    if (input.type === 'password') {
-        input.type = 'text';
-        btn.innerHTML = eyeClosed;
-    } else {
-        input.type = 'password';
-        btn.innerHTML = eyeOpen;
-    }
-}
-async function handleRegister(e) {
-    e.preventDefault();
-    const first_name = document.getElementById('regFirstName').value.trim();
-    const last_name  = document.getElementById('regLastName').value.trim();
-    const email      = document.getElementById('regEmail').value.trim();
-    const username   = document.getElementById('regUsername').value.trim();
-    const password   = document.getElementById('regPassword').value;
-    try {
-        const r = await fetch(`${API_BASE_URL}/register`, {
-            method: 'POST', headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({first_name, last_name, email, username, password})
-        });
-        const data = await r.json();
-        if (!r.ok) { showToast(data.detail || 'Registration failed', 'error'); return; }
-        Auth.save(data.token, data.username);
-        updateAuthUI();
-        showToast(`Welcome, ${data.first_name || data.username}! 🎉`, 'success');
-        showSection('create');
-    } catch { showToast('Connection error', 'error'); }
-}
-
-async function handleLogin(e) {
-    e.preventDefault();
-    const username = document.getElementById('loginUsername').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    try {
-        const r = await fetch(`${API_BASE_URL}/login`, {
-            method: 'POST', headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({username, password})
-        });
-        const data = await r.json();
-        if (!r.ok) { showToast(data.detail || 'Login failed', 'error'); return; }
-        Auth.save(data.token, data.username);
-        updateAuthUI();
-        showToast(`Welcome back, ${data.username}! 👋`, 'success');
-        showSection('create');
-    } catch { showToast('Connection error', 'error'); }
-}
-
-function handleLogout() {
-    Auth.clear();
-    updateAuthUI();
-    showToast('Logged out', 'info');
-    showSection('home');
-}
-
-function updateAuthUI() {
-    const userInfo  = document.getElementById('userInfo');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const authBtns  = document.getElementById('authBtns');
-    if (Auth.isLoggedIn()) {
-        if (userInfo)  userInfo.textContent = `👤 ${Auth.getUsername()}`;
-        if (logoutBtn) logoutBtn.style.display = 'inline-flex';
-        if (authBtns)  authBtns.style.display  = 'none';
-    } else {
-        if (userInfo)  userInfo.textContent = '';
-        if (logoutBtn) logoutBtn.style.display = 'none';
-        if (authBtns)  authBtns.style.display  = 'flex';
-    }
-}
+// ── Application State ─────────────────────────────────────────────────────────
 // All mutable state in one place — easier to debug and maintain
 const AppState = {
     // Form selections
@@ -212,6 +63,140 @@ const AppState = {
 // Convenience aliases so existing code works without changes
 // These proxy reads/writes to AppState
 let selectedTheme            = '';
+
+// ── Auth helpers ─────────────────────────────────────────────────────────────
+const Auth = {
+    getToken:    ()      => localStorage.getItem('ks_token'),
+    getUsername: ()      => localStorage.getItem('ks_username'),
+    isLoggedIn:  ()      => !!localStorage.getItem('ks_token'),
+    save: (token, username) => {
+        localStorage.setItem('ks_token', token);
+        localStorage.setItem('ks_username', username);
+    },
+    clear: () => {
+        localStorage.removeItem('ks_token');
+        localStorage.removeItem('ks_username');
+    },
+};
+
+function updateAuthUI() {
+    const userInfo  = document.getElementById('userInfo');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const authBtns  = document.getElementById('authBtns');
+    if (Auth.isLoggedIn()) {
+        if (userInfo)  userInfo.textContent = '👤 ' + Auth.getUsername();
+        if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+        if (authBtns)  authBtns.style.display  = 'none';
+    } else {
+        if (userInfo)  userInfo.textContent = '';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        if (authBtns)  authBtns.style.display  = 'flex';
+    }
+}
+
+function handleLogout() {
+    Auth.clear();
+    updateAuthUI();
+    showToast('Logged out', 'info');
+    showSection('home');
+}
+
+function switchAuthTab(tab) {
+    const loginForm    = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const tabLogin     = document.getElementById('tabLogin');
+    const tabRegister  = document.getElementById('tabRegister');
+    if (!loginForm || !registerForm) return;
+    if (tab === 'login') {
+        loginForm.style.display    = 'block';
+        registerForm.style.display = 'none';
+        if (tabLogin)    { tabLogin.style.background = 'linear-gradient(135deg,#06b6d4,#0891b2)'; tabLogin.style.color = 'white'; }
+        if (tabRegister) { tabRegister.style.background = 'transparent'; tabRegister.style.color = 'rgba(229,241,251,0.5)'; }
+    } else {
+        loginForm.style.display    = 'none';
+        registerForm.style.display = 'block';
+        if (tabRegister) { tabRegister.style.background = 'linear-gradient(135deg,#8b5cf6,#7c3aed)'; tabRegister.style.color = 'white'; }
+        if (tabLogin)    { tabLogin.style.background = 'transparent'; tabLogin.style.color = 'rgba(229,241,251,0.5)'; }
+    }
+}
+
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const eyeOpen   = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const eyeClosed = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    if (input.type === 'password') { input.type = 'text';     btn.innerHTML = eyeClosed; }
+    else                           { input.type = 'password'; btn.innerHTML = eyeOpen; }
+}
+
+function validateUsername(input) {
+    const hint = document.getElementById('usernameHint');
+    if (!hint) return;
+    const val = input.value;
+    if (!val) { hint.style.color = 'rgba(229,241,251,0.4)'; hint.textContent = '3-20 chars, letters/numbers/underscore'; return; }
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(val)) {
+        hint.style.color = '#f87171';
+        hint.textContent = val.length < 3 ? 'Too short' : val.length > 20 ? 'Too long' : 'Only letters, numbers, _ allowed';
+        input.style.borderColor = '#f87171';
+    } else {
+        hint.style.color = '#34d399'; hint.textContent = '✓ Looks good'; input.style.borderColor = '#34d399';
+    }
+}
+
+function checkPasswordStrength(pwd) {
+    const bars  = ['str1','str2','str3','str4'].map(id => document.getElementById(id));
+    const label = document.getElementById('strLabel');
+    if (!bars[0] || !label) return;
+    let score = 0;
+    if (pwd.length >= 8)          score++;
+    if (/[A-Z]/.test(pwd))        score++;
+    if (/[0-9]/.test(pwd))        score++;
+    if (/[^A-Za-z0-9]/.test(pwd)) score++;
+    const colors = ['#f87171','#fb923c','#fbbf24','#34d399'];
+    const labels = ['Weak','Fair','Good','Strong'];
+    bars.forEach((b, i) => { if(b) b.style.background = i < score ? colors[score-1] : 'rgba(255,255,255,0.1)'; });
+    label.textContent = pwd.length > 0 ? (labels[score-1] || '') : '';
+    label.style.color = score > 0 ? colors[score-1] : 'rgba(229,241,251,0.4)';
+}
+
+async function handleRegister(e) {
+    e.preventDefault();
+    const first_name = document.getElementById('regFirstName') ? document.getElementById('regFirstName').value.trim() : '';
+    const last_name  = document.getElementById('regLastName')  ? document.getElementById('regLastName').value.trim()  : '';
+    const email      = document.getElementById('regEmail')     ? document.getElementById('regEmail').value.trim()     : '';
+    const username   = document.getElementById('regUsername')  ? document.getElementById('regUsername').value.trim()  : '';
+    const password   = document.getElementById('regPassword')  ? document.getElementById('regPassword').value         : '';
+    try {
+        const r = await fetch(API_BASE_URL + '/register', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({first_name, last_name, email, username, password})
+        });
+        const data = await r.json();
+        if (!r.ok) { showToast(data.detail || 'Registration failed', 'error'); return; }
+        Auth.save(data.token, data.username);
+        updateAuthUI();
+        showToast('Welcome, ' + (data.first_name || data.username) + '!', 'success');
+        showSection('create');
+    } catch(err) { showToast('Connection error', 'error'); }
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername') ? document.getElementById('loginUsername').value.trim() : '';
+    const password = document.getElementById('loginPassword') ? document.getElementById('loginPassword').value        : '';
+    try {
+        const r = await fetch(API_BASE_URL + '/login', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({username, password})
+        });
+        const data = await r.json();
+        if (!r.ok) { showToast(data.detail || 'Login failed', 'error'); return; }
+        Auth.save(data.token, data.username);
+        updateAuthUI();
+        showToast('Welcome back, ' + data.username + '!', 'success');
+        showSection('create');
+    } catch(err) { showToast('Connection error', 'error'); }
+}
+
 let currentStory             = null;
 let allStories               = [];
 let selectedGender           = 'boy';
@@ -238,14 +223,8 @@ let isAnimating              = false;
 document.addEventListener('DOMContentLoaded', function() {
     log.info('🚀 Kids Story Generator - Frontend Loaded');
 
-    // Auth UI
+    // Init auth UI on load
     updateAuthUI();
-    const regForm = document.getElementById('registerForm');
-    if (regForm) regForm.addEventListener('submit', handleRegister);
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) loginForm.addEventListener('submit', handleLogin);
-    
-    // Always redirect to home page on load/reload
     window.history.replaceState(null, '', window.location.pathname);
     
     // Hide all sections except home initially
@@ -384,12 +363,8 @@ function setupNavigation() {
     const getStartedBtn = document.getElementById('getStartedBtn');
     if (getStartedBtn) {
         getStartedBtn.addEventListener('click', () => {
-            if (Auth.isLoggedIn()) {
-                showSection('create');
-            } else {
-                showSection('auth');
-                switchAuthTab('login');
-            }
+            showSection('auth');
+            switchAuthTab('login');
         });
     }
 }

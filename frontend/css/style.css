@@ -9,9 +9,14 @@
     display: none !important;
 }
 
-/* Auth page needs flex layout when visible */
-.auth-page:not(.section-hidden) {
+/* Auth page uses flex layout when visible */
+#auth:not(.section-hidden) {
     display: flex !important;
+}
+
+/* Make sure create section is visible when not hidden */
+#create:not(.section-hidden) {
+    display: block !important;
 }
 
 /* --- Base & Body Styles (DARK THEME) --- */
