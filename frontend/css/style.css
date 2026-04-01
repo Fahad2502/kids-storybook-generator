@@ -9,6 +9,11 @@
     display: none !important;
 }
 
+/* Auth page needs flex layout when visible */
+.auth-page:not(.section-hidden) {
+    display: flex !important;
+}
+
 /* --- Base & Body Styles (DARK THEME) --- */
 * {
     margin: 0;
