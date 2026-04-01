@@ -180,7 +180,7 @@ async def generate_ai_story(request: StoryRequest) -> dict:
             )
             print(f"Custom theme: {request.theme}")
         else:
-            scenario = random.choice(_SCENARIOS[theme_key]).format(name=request.name)
+            scenario = random.choice(_SCENARIOS[theme_key]).format(name=names[0])
             scenario_line = f"SCENARIO (use this exact situation, do not change it):\n{scenario}\n"
             print(f"Scenario: {scenario}")
 
@@ -288,7 +288,7 @@ async def generate_ai_story(request: StoryRequest) -> dict:
             desc = groq_client.chat.completions.create(
                 model="llama-3.1-8b-instant",
                 messages=[{"role": "user", "content": (
-                    f"Write a SHORT physical description of {request.name} for an illustrator. "
+                    f"Write a SHORT physical description of {names[0]} for an illustrator. "
                     f"Include: age (~{request.age} years old), hair color/style, eye color, skin tone, one specific outfit. "
                     "Max 25 words. Descriptive phrases only, no sentences.\n\n"
                     f"Story title: {story_data['title']}\n"
