@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.config import USE_FREE_MODE, IMAGE_MODE
 from backend.database import init_database
-from backend.routes import misc, stories, images
+from backend.routes import misc, stories, images, auth as auth_routes
 
 
 @asynccontextmanager
@@ -51,6 +51,7 @@ app.mount("/img", StaticFiles(directory="frontend/img"), name="img")
 app.include_router(misc.router)
 app.include_router(stories.router)
 app.include_router(images.router)
+app.include_router(auth_routes.router)
 
 
 if __name__ == "__main__":

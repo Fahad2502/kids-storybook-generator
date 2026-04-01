@@ -24,7 +24,80 @@ function showToast(message, type = 'info', duration = 3500) {
     }, duration);
 }
 
-// ── Application State ─────────────────────────────────────────────────────────
+// ── Auth helpers ─────────────────────────────────────────────────────────────
+const Auth = {
+    getToken:    ()      => localStorage.getItem('ks_token'),
+    getUsername: ()      => localStorage.getItem('ks_username'),
+    isLoggedIn:  ()      => !!localStorage.getItem('ks_token'),
+    save: (token, username) => {
+        localStorage.setItem('ks_token', token);
+        localStorage.setItem('ks_username', username);
+    },
+    clear: () => {
+        localStorage.removeItem('ks_token');
+        localStorage.removeItem('ks_username');
+    },
+    headers: () => {
+        const t = localStorage.getItem('ks_token');
+        return t ? { 'Content-Type': 'application/json', 'Authorization': `Bearer ${t}` }
+                 : { 'Content-Type': 'application/json' };
+    },
+};
+
+async function handleRegister(e) {
+    e.preventDefault();
+    const username = document.getElementById('regUsername').value.trim();
+    const password = document.getElementById('regPassword').value;
+    try {
+        const r = await fetch(`${API_BASE_URL}/register`, {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({username, password})
+        });
+        const data = await r.json();
+        if (!r.ok) { showToast(data.detail || 'Registration failed', 'error'); return; }
+        Auth.save(data.token, data.username);
+        updateAuthUI();
+        showToast(`Welcome, ${data.username}!`, 'success');
+        showSection('create');
+    } catch { showToast('Connection error', 'error'); }
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    try {
+        const r = await fetch(`${API_BASE_URL}/login`, {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({username, password})
+        });
+        const data = await r.json();
+        if (!r.ok) { showToast(data.detail || 'Login failed', 'error'); return; }
+        Auth.save(data.token, data.username);
+        updateAuthUI();
+        showToast(`Welcome back, ${data.username}!`, 'success');
+        showSection('create');
+    } catch { showToast('Connection error', 'error'); }
+}
+
+function handleLogout() {
+    Auth.clear();
+    updateAuthUI();
+    showToast('Logged out', 'info');
+    showSection('home');
+}
+
+function updateAuthUI() {
+    const userInfo = document.getElementById('userInfo');
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (Auth.isLoggedIn()) {
+        if (userInfo) userInfo.textContent = `👤 ${Auth.getUsername()}`;
+        if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+    } else {
+        if (userInfo) userInfo.textContent = '';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+    }
+}
 // All mutable state in one place — easier to debug and maintain
 const AppState = {
     // Form selections
@@ -88,6 +161,13 @@ let isAnimating              = false;
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
     log.info('🚀 Kids Story Generator - Frontend Loaded');
+
+    // Auth UI
+    updateAuthUI();
+    const regForm = document.getElementById('registerForm');
+    if (regForm) regForm.addEventListener('submit', handleRegister);
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) loginForm.addEventListener('submit', handleLogin);
     
     // Always redirect to home page on load/reload
     window.history.replaceState(null, '', window.location.pathname);
@@ -227,7 +307,9 @@ function setupNavigation() {
     
     const getStartedBtn = document.getElementById('getStartedBtn');
     if (getStartedBtn) {
-        getStartedBtn.addEventListener('click', () => showSection('create'));
+        getStartedBtn.addEventListener('click', () => {
+            showSection(Auth.isLoggedIn() ? 'create' : 'login');
+        });
     }
 }
 

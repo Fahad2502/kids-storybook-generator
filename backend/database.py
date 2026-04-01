@@ -42,6 +42,14 @@ def init_database() -> None:
         cur = conn.cursor()
         if USE_POSTGRES:
             cur.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id       SERIAL PRIMARY KEY,
+                    username TEXT NOT NULL UNIQUE,
+                    password TEXT NOT NULL,
+                    date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            cur.execute("""
                 CREATE TABLE IF NOT EXISTS stories (
                     id          SERIAL PRIMARY KEY,
                     name        TEXT    NOT NULL,
@@ -49,7 +57,8 @@ def init_database() -> None:
                     full_text   TEXT    NOT NULL,
                     is_favorite INTEGER DEFAULT 0,
                     date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    rating      INTEGER DEFAULT NULL
+                    rating      INTEGER DEFAULT NULL,
+                    user_id     INTEGER DEFAULT NULL
                 )
             """)
             cur.execute("""
@@ -62,6 +71,14 @@ def init_database() -> None:
             """)
         else:
             cur.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id       INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT NOT NULL UNIQUE,
+                    password TEXT NOT NULL,
+                    date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+            """)
+            cur.execute("""
                 CREATE TABLE IF NOT EXISTS stories (
                     id          INTEGER PRIMARY KEY AUTOINCREMENT,
                     name        TEXT    NOT NULL,
@@ -69,7 +86,8 @@ def init_database() -> None:
                     full_text   TEXT    NOT NULL,
                     is_favorite INTEGER DEFAULT 0,
                     date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    rating      INTEGER DEFAULT NULL
+                    rating      INTEGER DEFAULT NULL,
+                    user_id     INTEGER DEFAULT NULL
                 )
             """)
             cur.execute("""
@@ -84,7 +102,8 @@ def init_database() -> None:
             cur.execute("PRAGMA table_info(stories)")
             cols = [c[1] for c in cur.fetchall()]
             for col, sql in {
-                "rating": "ALTER TABLE stories ADD COLUMN rating INTEGER DEFAULT NULL",
+                "rating":  "ALTER TABLE stories ADD COLUMN rating INTEGER DEFAULT NULL",
+                "user_id": "ALTER TABLE stories ADD COLUMN user_id INTEGER DEFAULT NULL",
             }.items():
                 if col not in cols:
                     cur.execute(sql)
@@ -156,5 +175,45 @@ def save_story(name: str, theme: str, story_data: dict) -> int:
             story_id = cur.lastrowid
         conn.commit()
         return story_id
+    finally:
+        conn.close()
+
+
+def create_user(username: str, hashed_password: str) -> int:
+    """Create a new user. Returns user ID. Raises on duplicate username."""
+    conn = get_conn()
+    try:
+        cur = conn.cursor()
+        if USE_POSTGRES:
+            cur.execute(
+                "INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id",
+                (username, hashed_password)
+            )
+            user_id = cur.fetchone()[0]
+        else:
+            cur.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (username, hashed_password)
+            )
+            user_id = cur.lastrowid
+        conn.commit()
+        return user_id
+    finally:
+        conn.close()
+
+
+def get_user_by_username(username: str) -> dict | None:
+    """Get user by username. Returns dict or None."""
+    conn = get_conn()
+    try:
+        cur = conn.cursor()
+        if USE_POSTGRES:
+            cur.execute("SELECT id, username, password FROM users WHERE username = %s", (username,))
+        else:
+            cur.execute("SELECT id, username, password FROM users WHERE username = ?", (username,))
+        row = cur.fetchone()
+        if row:
+            return {"id": row[0], "username": row[1], "password": row[2]}
+        return None
     finally:
         conn.close()
