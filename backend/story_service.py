@@ -139,17 +139,32 @@ async def generate_ai_story(request: StoryRequest) -> dict:
         else:
             char_intro = request.name
 
-        # Story type variety — rotate through different narrative styles
-        story_types = [
-            ("mystery", "A mystery story — something strange or unexplained happens. Build suspense. The characters must investigate and solve it."),
-            ("adventure", "A classic adventure — the characters go on a journey, face real danger, and must be brave to succeed."),
-            ("moral", "A fable-style story — the character makes a wrong choice, faces consequences, and learns a meaningful lesson."),
-            ("funny", "A lighthearted, funny story — full of humor, silly situations, and a warm happy ending. Make the reader smile."),
-            ("spooky", "A spooky but age-appropriate story — mysterious atmosphere, a ghost or strange creature, tension that resolves safely."),
-            ("friendship", "A story about friendship being tested — a misunderstanding, a hard choice, and ultimately loyalty winning."),
-        ]
-        story_type_key, story_type_instruction = random.choice(story_types)
-        print(f"Story type: {story_type_key}")
+        # Infer story type from theme and extra details — not random
+        theme_lower = request.theme.lower()
+        extra_lower = (request.extra_details or "").lower()
+        combined = theme_lower + " " + extra_lower
+
+        if any(w in combined for w in ["ghost", "spooky", "scary", "haunted", "vampire", "witch", "demon", "horror", "mystery", "strange", "weird"]):
+            story_type_instruction = "A spooky but age-appropriate story — mysterious atmosphere, a ghost or strange creature, tension that resolves safely."
+        elif any(w in combined for w in ["funny", "silly", "laugh", "joke", "humor", "comic", "crazy", "ridiculous"]):
+            story_type_instruction = "A lighthearted, funny story — full of humor, silly situations, and a warm happy ending. Make the reader smile and laugh."
+        elif any(w in combined for w in ["friend", "friendship", "together", "team", "partner", "buddy", "trust", "loyalty"]):
+            story_type_instruction = "A story about friendship — characters face a challenge together, trust is tested, and loyalty wins in the end."
+        elif any(w in combined for w in ["pirate", "treasure", "adventure", "explore", "quest", "journey", "discover", "map", "cave", "forest", "mountain"]):
+            story_type_instruction = "A classic adventure — the characters go on a journey, face real danger, and must be brave to succeed."
+        elif any(w in combined for w in ["magic", "wizard", "dragon", "fairy", "enchant", "spell", "fantasy", "kingdom", "princess", "prince"]):
+            story_type_instruction = "A magical fantasy story — a world of wonder, a magical problem to solve, and a hero who uses courage and kindness."
+        elif any(w in combined for w in ["space", "alien", "planet", "rocket", "star", "galaxy", "astronaut", "robot"]):
+            story_type_instruction = "A sci-fi adventure — exploring the unknown, encountering something unexpected in space, and using intelligence to solve problems."
+        elif any(w in combined for w in ["animal", "pet", "dog", "cat", "bird", "rabbit", "lion", "tiger", "elephant", "fish"]):
+            story_type_instruction = "A heartwarming animal story — a bond between a child and an animal, a problem they solve together, and a lesson about kindness."
+        elif any(w in combined for w in ["ocean", "sea", "underwater", "mermaid", "fish", "whale", "coral", "beach"]):
+            story_type_instruction = "An underwater adventure — exploring the ocean, meeting sea creatures, and discovering something magical beneath the waves."
+        else:
+            # Default: let the theme drive the story naturally
+            story_type_instruction = f"A creative story that fully embraces the '{request.theme}' theme. Make it engaging, surprising, and memorable for a {request.age}-year-old."
+
+        print(f"Story type inferred from theme '{request.theme}': {story_type_instruction[:60]}")
 
         # Known themes use a concrete scenario seed.
         # Custom themes skip the seed so the AI uses the theme freely.
