@@ -4,9 +4,9 @@ const API_BASE_URL = 'http://localhost:8025';
 // ── Logger — silent in production, active in development ─────────────────────
 const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 const log = {
-    info:  (...a) => isDev && console.log(...a),
-    warn:  (...a) => isDev && console.warn(...a),
-    error: (...a) => isDev && console.error(...a),
+    info:  (...a) => isDev && log.info(...a),
+    warn:  (...a) => isDev && log.warn(...a),
+    error: (...a) => isDev && log.error(...a),
 };
 
 // ── Toast notifications ───────────────────────────────────────────────────────
@@ -24,66 +24,13 @@ function showToast(message, type = 'info', duration = 3500) {
     }, duration);
 }
 
-// ── Application State ─────────────────────────────────────────────────────────
-// All mutable state in one place — easier to debug and maintain
-const AppState = {
-    // Form selections
-    selectedTheme:           '',
-    selectedAge:             null,
-    selectedGender:          'boy',
-    selectedLength:          'medium',
-    professionalSelectedTheme: null,
-
-    // Gallery
-    allStories:              [],
-    currentThemeFilter:      'all',
-    currentSort:             'newest',
-
-    // Story view
-    currentStory:            null,
-    lastCoverUsed:           {},
-
-    // Book navigation
-    currentPage:             0,
-    totalPages:              0,
-    isAnimating:             false,
-
-    // TTS
-    ttsUtterance:            null,
-    ttsActive:               false,
-    ttsPaused:               false,
-    autoReadMode:            false,
-    ttsAllVoices:            [],
-    ttsRate:                 0.9,
-    ttsSelectedVoice:        null,
-    currentPreset:           'us',
-    currentPitch:            1.0,
-};
-
-// Convenience aliases so existing code works without changes
-// These proxy reads/writes to AppState
-let selectedTheme            = '';
-let currentStory             = null;
-let allStories               = [];
-let selectedGender           = 'boy';
-let selectedLength           = 'medium';
-let currentThemeFilter       = 'all';
-let selectedAge              = null;
-let professionalSelectedTheme = null;
-let lastCoverUsed            = {};
-let currentSort              = 'newest';
-let ttsUtterance             = null;
-let ttsActive                = false;
-let ttsPaused                = false;
-let autoReadMode             = false;
-let ttsAllVoices             = [];
-let ttsRate                  = 0.9;
-let ttsSelectedVoice         = null;
-let currentPreset            = 'us';
-let currentPitch             = 1.0;
-let currentPage              = 0;
-let totalPages               = 0;
-let isAnimating              = false;
+// Global variables
+let selectedTheme = '';
+let currentStory = null;
+let allStories = []; // store for search/filter
+let selectedGender = 'boy';
+let selectedLength = 'medium';
+let currentThemeFilter = 'all';
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
@@ -389,6 +336,8 @@ function getAgeEmoji(age) {
 }
 
 // Professional form functions
+let selectedAge = null;
+let professionalSelectedTheme = null;
 
 // Select age button
 function selectAge(age) {
@@ -1133,6 +1082,7 @@ function displayStory(storyData) {
 }
 
 // Track which cover was used last for each theme (alternates between 1 and 2)
+let lastCoverUsed = {};
 
 // Generate AI images for all story pages (sequential to avoid rate limits)
 async function generateAllPageImages(storyData) {
@@ -1569,6 +1519,7 @@ function initStarRating() {
 }
 
 // Filter and sort gallery
+let currentSort = 'newest';
 
 function setSort(sort) {
     currentSort = sort;
@@ -1924,6 +1875,15 @@ document.addEventListener('keydown', function(e) {
 // ============================================
 // TEXT-TO-SPEECH ENGINE (Web Speech API)
 // ============================================
+let ttsUtterance = null;
+let ttsActive = false;
+let ttsPaused = false;
+let autoReadMode = false;
+let ttsAllVoices = [];
+let ttsRate = 0.9;
+let ttsSelectedVoice = null;
+let currentPreset = 'us';
+let currentPitch = 1.0;
 
 const VOICE_PRESETS = {
     us:   { langs: ['en-US'], keywords: ['aria','jenny','guy','zira','david','mark'], pitch: 1.0  },
@@ -2107,6 +2067,9 @@ function updateTTSButton(state) {
 }
 
 // Picture Book Navigation Functions
+let currentPage = 0; // 0 = cover, 1+ = story pages
+let totalPages = 0;
+let isAnimating = false; // Prevent rapid clicks during animation
 
 function startReading() {
     log.info('📖 START READING clicked!');
