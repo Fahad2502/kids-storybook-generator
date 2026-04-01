@@ -44,6 +44,38 @@ const Auth = {
     },
 };
 
+function switchAuthTab(tab) {
+    const loginForm    = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const tabLogin     = document.getElementById('tabLogin');
+    const tabRegister  = document.getElementById('tabRegister');
+    if (tab === 'login') {
+        loginForm.style.display    = 'block';
+        registerForm.style.display = 'none';
+        tabLogin.style.background    = 'linear-gradient(135deg,#06b6d4,#0891b2)';
+        tabLogin.style.color         = 'white';
+        tabRegister.style.background = 'transparent';
+        tabRegister.style.color      = 'rgba(229,241,251,0.5)';
+    } else {
+        loginForm.style.display    = 'none';
+        registerForm.style.display = 'block';
+        tabRegister.style.background = 'linear-gradient(135deg,#8b5cf6,#7c3aed)';
+        tabRegister.style.color      = 'white';
+        tabLogin.style.background    = 'transparent';
+        tabLogin.style.color         = 'rgba(229,241,251,0.5)';
+    }
+}
+
+function togglePasswordVisibility(inputId, btn) {
+    const input = document.getElementById(inputId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+    } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+    }
+}
 async function handleRegister(e) {
     e.preventDefault();
     const username = document.getElementById('regUsername').value.trim();
@@ -57,7 +89,7 @@ async function handleRegister(e) {
         if (!r.ok) { showToast(data.detail || 'Registration failed', 'error'); return; }
         Auth.save(data.token, data.username);
         updateAuthUI();
-        showToast(`Welcome, ${data.username}!`, 'success');
+        showToast(`Welcome, ${data.username}! 🎉`, 'success');
         showSection('create');
     } catch { showToast('Connection error', 'error'); }
 }
@@ -75,7 +107,7 @@ async function handleLogin(e) {
         if (!r.ok) { showToast(data.detail || 'Login failed', 'error'); return; }
         Auth.save(data.token, data.username);
         updateAuthUI();
-        showToast(`Welcome back, ${data.username}!`, 'success');
+        showToast(`Welcome back, ${data.username}! 👋`, 'success');
         showSection('create');
     } catch { showToast('Connection error', 'error'); }
 }
@@ -88,14 +120,17 @@ function handleLogout() {
 }
 
 function updateAuthUI() {
-    const userInfo = document.getElementById('userInfo');
+    const userInfo  = document.getElementById('userInfo');
     const logoutBtn = document.getElementById('logoutBtn');
+    const authBtns  = document.getElementById('authBtns');
     if (Auth.isLoggedIn()) {
-        if (userInfo) userInfo.textContent = `👤 ${Auth.getUsername()}`;
+        if (userInfo)  userInfo.textContent = `👤 ${Auth.getUsername()}`;
         if (logoutBtn) logoutBtn.style.display = 'inline-flex';
+        if (authBtns)  authBtns.style.display  = 'none';
     } else {
-        if (userInfo) userInfo.textContent = '';
+        if (userInfo)  userInfo.textContent = '';
         if (logoutBtn) logoutBtn.style.display = 'none';
+        if (authBtns)  authBtns.style.display  = 'flex';
     }
 }
 // All mutable state in one place — easier to debug and maintain
@@ -308,7 +343,12 @@ function setupNavigation() {
     const getStartedBtn = document.getElementById('getStartedBtn');
     if (getStartedBtn) {
         getStartedBtn.addEventListener('click', () => {
-            showSection(Auth.isLoggedIn() ? 'create' : 'login');
+            if (Auth.isLoggedIn()) {
+                showSection('create');
+            } else {
+                showSection('auth');
+                switchAuthTab('login');
+            }
         });
     }
 }
@@ -318,7 +358,7 @@ function showSection(sectionId) {
     log.info('🔄 showSection called with:', sectionId);
     
     // Hide all sections
-    const sections = ['home', 'create', 'gallery', 'favorites', 'register', 'login', 'storyView', 'about'];
+    const sections = ['home', 'create', 'gallery', 'favorites', 'register', 'login', 'storyView', 'about', 'auth'];
     sections.forEach(id => {
         const section = document.getElementById(id);
         if (section) {
