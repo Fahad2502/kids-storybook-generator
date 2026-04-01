@@ -1,6 +1,14 @@
 // API Base URL - adjust this to match your backend
 const API_BASE_URL = 'http://localhost:8025';
 
+// ── Logger — silent in production, active in development ─────────────────────
+const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const log = {
+    info:  (...a) => isDev && log.info(...a),
+    warn:  (...a) => isDev && log.warn(...a),
+    error: (...a) => isDev && log.error(...a),
+};
+
 // ── Toast notifications ───────────────────────────────────────────────────────
 function showToast(message, type = 'info', duration = 3500) {
     const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
@@ -26,7 +34,7 @@ let currentThemeFilter = 'all';
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Kids Story Generator - Frontend Loaded');
+    log.info('🚀 Kids Story Generator - Frontend Loaded');
     
     // Always redirect to home page on load/reload
     window.history.replaceState(null, '', window.location.pathname);
@@ -38,9 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const storyForm = document.getElementById('storyForm');
     if (storyForm) {
         storyForm.addEventListener('submit', handleStoryGeneration);
-        console.log('✅ Story form event listener added');
+        log.info('✅ Story form event listener added');
     } else {
-        console.error('❌ Story form not found');
+        log.error('❌ Story form not found');
     }
     
     // Load recent stories
@@ -58,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Test owl immediately on page load
     setTimeout(() => {
-        console.log('🦉 Testing owl on page load...');
+        log.info('🦉 Testing owl on page load...');
         showCharacterMessage("🦉 Hello! I'm your story helper owl. Welcome to Kids Story Generator!");
         
         setTimeout(() => {
@@ -70,20 +78,20 @@ document.addEventListener('DOMContentLoaded', function() {
 // Test API connection
 async function testAPIConnection() {
     try {
-        console.log('🔌 Testing API connection to:', API_BASE_URL);
+        log.info('🔌 Testing API connection to:', API_BASE_URL);
         const response = await fetch(`${API_BASE_URL}/api`);
-        console.log('📡 Response status:', response.status);
+        log.info('📡 Response status:', response.status);
         
         if (response.ok) {
             const data = await response.json();
-            console.log('✅ API connection successful:', data);
+            log.info('✅ API connection successful:', data);
             setOnlineMode(true);
         } else {
-            console.error('❌ API connection failed:', response.status, response.statusText);
+            log.error('❌ API connection failed:', response.status, response.statusText);
             setOnlineMode(false);
         }
     } catch (error) {
-        console.error('❌ API connection error:', error);
+        log.error('❌ API connection error:', error);
         setOnlineMode(false);
     }
 }
@@ -141,7 +149,7 @@ function setOnlineMode(online) {
             }
         }
 
-        console.log('📴 App running in offline/read-only mode');
+        log.info('📴 App running in offline/read-only mode');
     } else {
         // Remove offline notice from create section if it exists
         const notice = document.getElementById('offlineCreateNotice');
@@ -149,7 +157,7 @@ function setOnlineMode(online) {
 
         // Re-enable submit button
         validateProfessionalForm();
-        console.log('🌐 App running in online mode');
+        log.info('🌐 App running in online mode');
     }
 }
 
@@ -172,7 +180,7 @@ function setupNavigation() {
 
 // Show specific section
 function showSection(sectionId) {
-    console.log('🔄 showSection called with:', sectionId);
+    log.info('🔄 showSection called with:', sectionId);
     
     // Hide all sections
     const sections = ['home', 'create', 'gallery', 'favorites', 'register', 'login', 'storyView', 'about'];
@@ -180,7 +188,7 @@ function showSection(sectionId) {
         const section = document.getElementById(id);
         if (section) {
             section.classList.add('section-hidden');
-            console.log('  ➖ Hiding section:', id);
+            log.info('  ➖ Hiding section:', id);
         }
     });
     
@@ -191,12 +199,12 @@ function showSection(sectionId) {
         targetSection.classList.remove('section-fade');
         void targetSection.offsetWidth; // force reflow
         targetSection.classList.add('section-fade');
-        console.log('  ✅ Showing section:', sectionId);
+        log.info('  ✅ Showing section:', sectionId);
         
         // Scroll to top of the section
         targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else {
-        console.error('  ❌ Section not found:', sectionId);
+        log.error('  ❌ Section not found:', sectionId);
     }
     
     // Update navigation active state
@@ -211,7 +219,7 @@ function showSection(sectionId) {
 
 // Theme selection
 function selectTheme(element) {
-    console.log('🎨 Theme selected:', element.dataset.theme);
+    log.info('🎨 Theme selected:', element.dataset.theme);
     
     // Remove selected class from all themes
     document.querySelectorAll('.theme-option').forEach(option => {
@@ -222,7 +230,7 @@ function selectTheme(element) {
     element.classList.add('selected');
     selectedTheme = element.dataset.theme;
     
-    console.log('✅ Selected theme:', selectedTheme);
+    log.info('✅ Selected theme:', selectedTheme);
     
     // Show owl encouragement for theme selection
     const themeMessages = {
@@ -246,7 +254,7 @@ function selectTheme(element) {
     const customThemeGroup = document.getElementById('customThemeGroup');
     if (selectedTheme === 'custom') {
         customThemeGroup.classList.remove('hidden');
-        console.log('📝 Custom theme input shown');
+        log.info('📝 Custom theme input shown');
     } else {
         customThemeGroup.classList.add('hidden');
     }
@@ -284,7 +292,7 @@ function selectThemeNew(element) {
         setTimeout(() => hideCharacterMessage(), 2500);
     }
     
-    console.log('Selected theme:', selectedTheme);
+    log.info('Selected theme:', selectedTheme);
 }
 
 // Update progress bar
@@ -422,7 +430,8 @@ function selectTheme(element) {
 function validateProfessionalForm() {
     const name = document.getElementById('characterName').value.trim();
     const submitBtn = document.getElementById('submitBtn');
-
+    
+    // Check if custom theme is selected and has value
     let themeValid = false;
     if (professionalSelectedTheme === 'custom') {
         const customTheme = document.getElementById('customTheme');
@@ -430,17 +439,17 @@ function validateProfessionalForm() {
     } else {
         themeValid = professionalSelectedTheme !== null;
     }
-
-    const isValid = name && selectedAge && themeValid;
-
+    
     if (submitBtn) {
-        // Keep visual disabled state but never set disabled=true so clicks still register
-        submitBtn.style.background = isValid
-            ? 'linear-gradient(135deg, #8b6eea 0%, #9d5fb8 100%)'
-            : '#cbd5e1';
-        submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
-        submitBtn.style.opacity = isValid ? '1' : '0.7';
-        submitBtn.dataset.valid = isValid ? 'true' : 'false';
+        if (name && selectedAge && themeValid) {
+            submitBtn.disabled = false;
+            submitBtn.style.background = 'linear-gradient(135deg, #8b6eea 0%, #9d5fb8 100%)';
+            submitBtn.style.cursor = 'pointer';
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.style.background = '#cbd5e1';
+            submitBtn.style.cursor = 'not-allowed';
+        }
     }
 }
 
@@ -583,17 +592,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Handle story generation
 async function handleStoryGeneration(e) {
     e.preventDefault();
-    console.log('📝 Story generation started');
-
-    // Check if form is valid (we removed disabled so need to check here)
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    if (submitBtn && submitBtn.dataset.valid !== 'true') {
-        const name = document.getElementById('characterName').value.trim();
-        if (!name) { showToast('Enter a character name first', 'warning'); return; }
-        if (!selectedAge) { showToast('Select an age', 'warning'); return; }
-        showToast('Select a theme to continue', 'warning');
-        return;
-    }
+    log.info('📝 Story generation started');
 
     if (window.isOffline) {
         showToast('You are offline. Connect to the internet to create stories.', 'warning');
@@ -609,7 +608,7 @@ async function handleStoryGeneration(e) {
         const age = parseInt(document.getElementById('characterAge').value);
         let theme = selectedTheme;
         
-        console.log('📋 Form data:', { name, age, theme });
+        log.info('📋 Form data:', { name, age, theme });
         
         if (!name || !age || !theme) {
             showToast('Please fill in all fields and select a theme.', 'warning');
@@ -669,9 +668,9 @@ async function handleStoryGeneration(e) {
         if (storyDetailsEl && storyDetailsEl.value.trim()) {
             requestData.extra_details = storyDetailsEl.value.trim();
         }
-        console.log('🚀 Sending request to:', `${API_BASE_URL}/generate-story`);
-        console.log('📋 Request data:', requestData);
-        console.log('🌐 Using fetch with full URL and headers...');
+        log.info('🚀 Sending request to:', `${API_BASE_URL}/generate-story`);
+        log.info('📋 Request data:', requestData);
+        log.info('🌐 Using fetch with full URL and headers...');
         
         // Make API call with explicit headers and longer timeout
         const controller = new AbortController();
@@ -690,13 +689,13 @@ async function handleStoryGeneration(e) {
         
         clearTimeout(timeoutId);
         
-        console.log('📡 Response received:', response.status, response.statusText);
-        console.log('📡 Response headers:', [...response.headers.entries()]);
-        console.log('📡 Response ok:', response.ok);
+        log.info('📡 Response received:', response.status, response.statusText);
+        log.info('📡 Response headers:', [...response.headers.entries()]);
+        log.info('📡 Response ok:', response.ok);
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('❌ API Error:', errorText);
+            log.error('❌ API Error:', errorText);
             let errorMessage;
             try {
                 const errorData = JSON.parse(errorText);
@@ -708,8 +707,8 @@ async function handleStoryGeneration(e) {
         }
         
         const storyData = await response.json();
-        console.log('✅ Story generated:', storyData);
-        console.log('📌 Full response data:', JSON.stringify(storyData, null, 2));
+        log.info('✅ Story generated:', storyData);
+        log.info('📌 Full response data:', JSON.stringify(storyData, null, 2));
         currentStory = storyData;
         showToast(`"${storyData.title}" is ready!`, 'success');
         
@@ -717,23 +716,23 @@ async function handleStoryGeneration(e) {
         if (window.isCustomTheme && window.customCoverNumber) {
             storyData.customCoverNumber = window.customCoverNumber;
             storyData.isCustomTheme = true;
-            console.log('✅ Added custom cover number to story:', window.customCoverNumber);
+            log.info('✅ Added custom cover number to story:', window.customCoverNumber);
         }
         
         // Store the story_id in window.currentStoryData for favorites
         window.currentStoryData = storyData;
         
         if (storyData.story_id) {
-            console.log('✅ Story ID received:', storyData.story_id);
-            console.log('✅ Story automatically saved to database!');
+            log.info('✅ Story ID received:', storyData.story_id);
+            log.info('✅ Story automatically saved to database!');
             
             // Update the story in database with cover number
             if (window.isCustomTheme && window.customCoverNumber) {
                 await updateStoryWithCoverNumber(storyData.story_id, window.customCoverNumber);
             }
         } else {
-            console.error('❌ ERROR: No story_id in response!');
-            console.error('❌ Response keys:', Object.keys(storyData));
+            log.error('❌ ERROR: No story_id in response!');
+            log.error('❌ Response keys:', Object.keys(storyData));
             showToast('Story may not have saved properly.', 'warning');
         }
         
@@ -759,7 +758,7 @@ async function handleStoryGeneration(e) {
         // Note: Removed automatic recent stories reload to improve performance
         
     } catch (error) {
-        console.error('❌ Error generating story:', error);
+        log.error('❌ Error generating story:', error);
         
         // More specific error messages
         let errorMessage = 'Unknown error occurred';
@@ -786,7 +785,7 @@ async function handleStoryGeneration(e) {
 // Update story with custom cover number
 async function updateStoryWithCoverNumber(storyId, coverNumber) {
     try {
-        console.log(`🔄 Updating story ${storyId} with cover number ${coverNumber}`);
+        log.info(`🔄 Updating story ${storyId} with cover number ${coverNumber}`);
         
         // Fetch the full story
         const response = await fetch(`${API_BASE_URL}/stories/${storyId}`);
@@ -809,10 +808,10 @@ async function updateStoryWithCoverNumber(storyId, coverNumber) {
         });
         
         if (updateResponse.ok) {
-            console.log('✅ Story updated with cover number');
+            log.info('✅ Story updated with cover number');
         }
     } catch (error) {
-        console.error('❌ Error updating story with cover number:', error);
+        log.error('❌ Error updating story with cover number:', error);
     }
 }
 
@@ -870,8 +869,8 @@ function displayStory(storyData) {
     }
     
     window.currentStoryData = storyData;
-    console.log('📌 Current story data:', window.currentStoryData);
-    console.log('📌 Story ID:', window.currentStoryData.story_id);
+    log.info('📌 Current story data:', window.currentStoryData);
+    log.info('📌 Story ID:', window.currentStoryData.story_id);
     
     showCharacterMessage("📖 Your beautiful book is ready!");
     
@@ -1052,15 +1051,15 @@ function displayStory(storyData) {
 
     // Load cover image with longer delay to ensure DOM is ready
     setTimeout(() => {
-        console.log('🖼️ Attempting to load cover for theme:', storyData.theme);
+        log.info('🖼️ Attempting to load cover for theme:', storyData.theme);
         const coverImg = document.getElementById('coverImage');
-        console.log('🖼️ Cover image element found:', !!coverImg);
+        log.info('🖼️ Cover image element found:', !!coverImg);
         if (coverImg) {
-            console.log('🖼️ Cover image element display:', coverImg.style.display);
+            log.info('🖼️ Cover image element display:', coverImg.style.display);
         }
         // Use 'custom' as theme if this was a custom theme
         const themeForCover = (window.isCustomTheme || storyData.isCustomTheme) ? 'custom' : storyData.theme;
-        console.log('🖼️ Using theme for cover:', themeForCover);
+        log.info('🖼️ Using theme for cover:', themeForCover);
         // Pass the saved cover number if available
         const coverNumber = storyData.customCoverNumber || window.customCoverNumber;
         loadCoverImage(themeForCover, coverNumber);
@@ -1073,7 +1072,7 @@ function displayStory(storyData) {
     storyResult.scrollIntoView({ behavior: 'smooth' });
     
     setTimeout(() => hideCharacterMessage(), 3000);
-    console.log('✅ Book displayed with inline styles - CSS conflicts bypassed!');
+    log.info('✅ Book displayed with inline styles - CSS conflicts bypassed!');
     
     // Check if this story is already favorited and update button
     setTimeout(() => {
@@ -1126,7 +1125,7 @@ async function generatePageImage(page, storyId, charName, charDesc) {
                         if (placeholder) placeholder.style.display = 'none';
                     };
                 }
-                console.log(`💾 Page ${page.page_number}: loaded from disk cache`);
+                log.info(`💾 Page ${page.page_number}: loaded from disk cache`);
                 return;
             }
         } catch (e) {
@@ -1165,14 +1164,14 @@ async function generatePageImage(page, storyId, charName, charDesc) {
             } else {
                 if (placeholder) placeholder.innerHTML = '❌ Image failed';
             }
-            console.warn(`⚠️ Image gen failed page ${page.page_number}: ${msg}`);
+            log.warn(`⚠️ Image gen failed page ${page.page_number}: ${msg}`);
             return;
         }
 
         const data = await res.json();
         if (!data.image) return;
 
-        console.log(`✅ Page ${page.page_number}: generated via ${data.backend}`);
+        log.info(`✅ Page ${page.page_number}: generated via ${data.backend}`);
 
         if (img) {
             img.src = data.image;
@@ -1183,17 +1182,17 @@ async function generatePageImage(page, storyId, charName, charDesc) {
         }
     } catch (e) {
         if (e.name === 'AbortError') {
-            console.warn(`⏱️ Image gen timed out for page ${page.page_number}`);
+            log.warn(`⏱️ Image gen timed out for page ${page.page_number}`);
             if (placeholder) placeholder.innerHTML = '⏱️ Timed out';
         } else {
-            console.warn(`⚠️ Image gen failed for page ${page.page_number}:`, e.message);
+            log.warn(`⚠️ Image gen failed for page ${page.page_number}:`, e.message);
         }
     }
 }
 
 // Function to load cover image based on theme
 function loadCoverImage(theme, savedCoverNumber) {
-    console.log('🎨 loadCoverImage called with theme:', theme, 'savedCoverNumber:', savedCoverNumber);
+    log.info('🎨 loadCoverImage called with theme:', theme, 'savedCoverNumber:', savedCoverNumber);
     
     let imageNumber;
     
@@ -1202,10 +1201,10 @@ function loadCoverImage(theme, savedCoverNumber) {
         // Use saved cover number if available, otherwise pick random
         if (savedCoverNumber) {
             imageNumber = savedCoverNumber;
-            console.log('✨ Using saved custom cover:', imageNumber);
+            log.info('✨ Using saved custom cover:', imageNumber);
         } else {
             imageNumber = Math.floor(Math.random() * 12) + 1; // Random number 1-12
-            console.log('✨ Custom theme detected - using random cover:', imageNumber);
+            log.info('✨ Custom theme detected - using random cover:', imageNumber);
         }
     } else {
         // Alternate between cover 1 and 2 for other themes
@@ -1215,17 +1214,17 @@ function loadCoverImage(theme, savedCoverNumber) {
             lastCoverUsed[theme] = lastCoverUsed[theme] === 1 ? 2 : 1;
         }
         imageNumber = lastCoverUsed[theme];
-        console.log('🎨 Using cover number:', imageNumber, 'for theme:', theme);
+        log.info('🎨 Using cover number:', imageNumber, 'for theme:', theme);
     }
     
     const coverImage = document.getElementById('coverImage');
     
     if (!coverImage) {
-        console.error('❌ Cover image element not found!');
+        log.error('❌ Cover image element not found!');
         return;
     }
     
-    console.log('✅ Cover image element found');
+    log.info('✅ Cover image element found');
     
     // Normalize theme name (lowercase, trim spaces)
     const normalizedTheme = theme ? theme.toLowerCase().trim() : 'adventure';
@@ -1236,7 +1235,7 @@ function loadCoverImage(theme, savedCoverNumber) {
     function tryLoadImage(extIndex) {
         if (extIndex >= extensions.length) {
             // No image found, show gradient fallback
-            console.log('⚠️ Cover image not found, using gradient fallback');
+            log.info('⚠️ Cover image not found, using gradient fallback');
             coverImage.style.display = 'none';
             // Change background to gradient instead of black
             const coverPage = document.getElementById('coverPage');
@@ -1247,18 +1246,18 @@ function loadCoverImage(theme, savedCoverNumber) {
         }
         
         const imagePath = `img/covers/${normalizedTheme}-${imageNumber}.${extensions[extIndex]}`;
-        console.log('🔍 Trying to load:', imagePath);
+        log.info('🔍 Trying to load:', imagePath);
         const img = new Image();
         
         img.onload = function() {
             // Image exists, show it
             coverImage.src = imagePath;
             coverImage.style.display = 'block';
-            console.log('✅ Cover image loaded successfully:', imagePath);
+            log.info('✅ Cover image loaded successfully:', imagePath);
         };
         
         img.onerror = function() {
-            console.log('❌ Failed to load:', imagePath);
+            log.info('❌ Failed to load:', imagePath);
             // Try next extension
             tryLoadImage(extIndex + 1);
         };
@@ -1347,14 +1346,14 @@ function openPictureBook() {
         hideCharacterMessage();
     }, 2000);
     
-    console.log('✅ Picture book displayed with polished UI and alternating cover!');
+    log.info('✅ Picture book displayed with polished UI and alternating cover!');
 }
 
 // No image generation - removed for clean text-only book experience
 
 // Load recent stories
 async function loadRecentStories() {
-    console.log('📚 Loading recent stories from:', `${API_BASE_URL}/stories`);
+    log.info('📚 Loading recent stories from:', `${API_BASE_URL}/stories`);
 
     // Show skeleton loaders while fetching
     const storiesList = document.getElementById('recent-stories-list');
@@ -1374,14 +1373,14 @@ async function loadRecentStories() {
 
     try {
         const response = await fetch(`${API_BASE_URL}/stories`);
-        console.log('📡 Gallery response status:', response.status);
+        log.info('📡 Gallery response status:', response.status);
         
         if (!response.ok) {
             throw new Error(`Failed to load stories: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
-        console.log('📖 Stories data received:', data);
+        log.info('📖 Stories data received:', data);
         allStories = data.stories;
         // Update count badge
         const countEl = document.getElementById('galleryCount');
@@ -1389,7 +1388,7 @@ async function loadRecentStories() {
         displayRecentStories(allStories);
         
     } catch (error) {
-        console.error('❌ Error loading recent stories:', error);
+        log.error('❌ Error loading recent stories:', error);
         const storiesList = document.getElementById('recent-stories-list');
         if (storiesList) {
             storiesList.innerHTML = `
@@ -1582,11 +1581,11 @@ function filterGallery() {
 function displayRecentStories(stories) {
     const storiesList = document.getElementById('recent-stories-list');
     if (!storiesList) {
-        console.error('❌ recent-stories-list element not found');
+        log.error('❌ recent-stories-list element not found');
         return;
     }
     
-    console.log('📚 Displaying', stories.length, 'stories');
+    log.info('📚 Displaying', stories.length, 'stories');
     
     if (stories.length === 0) {
         storiesList.innerHTML = `
@@ -1616,7 +1615,7 @@ function displayRecentStories(stories) {
         if (isCustomTheme) {
             const coverNum = story.customCoverNumber || Math.floor(Math.random() * 12) + 1;
             coverImage = `img/covers/custom-${coverNum}.png`;
-            console.log(`📸 Custom story ${story.id}: using cover ${coverNum}, saved: ${story.customCoverNumber}`);
+            log.info(`📸 Custom story ${story.id}: using cover ${coverNum}, saved: ${story.customCoverNumber}`);
         } else {
             coverImage = `img/covers/${story.theme}-1.png`;
         }
@@ -1660,7 +1659,7 @@ async function deleteStory(storyId) {
     }
     
     try {
-        console.log('🗑️ Attempting to delete story ID:', storyId);
+        log.info('🗑️ Attempting to delete story ID:', storyId);
         showCharacterMessage("🗑️ Deleting story...");
         
         const response = await fetch(`${API_BASE_URL}/stories/${storyId}`, {
@@ -1670,16 +1669,16 @@ async function deleteStory(storyId) {
             }
         });
         
-        console.log('📡 Delete response status:', response.status);
+        log.info('📡 Delete response status:', response.status);
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('❌ Delete failed with status:', response.status, 'Error:', errorText);
+            log.error('❌ Delete failed with status:', response.status, 'Error:', errorText);
             throw new Error(`Failed to delete story: ${response.status} - ${errorText}`);
         }
         
         const result = await response.json();
-        console.log('✅ Delete result:', result);
+        log.info('✅ Delete result:', result);
         
         // Show success message
         showCharacterMessage("✅ Story deleted successfully!");
@@ -1690,11 +1689,11 @@ async function deleteStory(storyId) {
             hideCharacterMessage();
         }, 1500);
         
-        console.log('✅ Story deleted:', storyId);
+        log.info('✅ Story deleted:', storyId);
         
     } catch (error) {
-        console.error('❌ Error deleting story:', error);
-        console.error('❌ Error details:', error.message);
+        log.error('❌ Error deleting story:', error);
+        log.error('❌ Error details:', error.message);
         showCharacterMessage("❌ Failed to delete story. Please try again.");
         setTimeout(hideCharacterMessage, 3000);
     }
@@ -1726,7 +1725,7 @@ async function viewStory(storyId) {
         }, 100);
         
     } catch (error) {
-        console.error('Error loading story:', error);
+        log.error('Error loading story:', error);
         showCharacterMessage("❌ Error loading story. Please try again.");
         setTimeout(() => hideCharacterMessage(), 2000);
     }
@@ -1771,12 +1770,12 @@ function closeStoryModal() {
 
 // Character helper functions
 function showCharacterMessage(message) {
-    console.log('🦉 showCharacterMessage called with:', message);
+    log.info('🦉 showCharacterMessage called with:', message);
     
     const container = document.getElementById('characterContainer');
     const messageEl = document.getElementById('characterMessage');
     
-    console.log('🦉 Elements found:', {
+    log.info('🦉 Elements found:', {
         container: !!container,
         messageEl: !!messageEl,
         containerClasses: container ? container.className : 'not found',
@@ -1793,20 +1792,20 @@ function showCharacterMessage(message) {
         container.style.transform = 'translateY(0)';
         container.style.zIndex = '9999';
         
-        console.log('🦉 Owl should be visible now!');
-        console.log('🦉 Container classes after show:', container.className);
+        log.info('🦉 Owl should be visible now!');
+        log.info('🦉 Container classes after show:', container.className);
     } else {
-        console.error('🦉 Could not find owl elements!');
+        log.error('🦉 Could not find owl elements!');
     }
 }
 
 function hideCharacterMessage() {
-    console.log('🦉 hideCharacterMessage called');
+    log.info('🦉 hideCharacterMessage called');
     
     const container = document.getElementById('characterContainer');
     if (container) {
         container.classList.add('hidden');
-        console.log('🦉 Owl hidden');
+        log.info('🦉 Owl hidden');
     }
 }
 
@@ -2073,7 +2072,7 @@ let totalPages = 0;
 let isAnimating = false; // Prevent rapid clicks during animation
 
 function startReading() {
-    console.log('📖 START READING clicked!');
+    log.info('📖 START READING clicked!');
     showCharacterMessage("📚 Great choice! Let's start this amazing adventure together!");
     
     setTimeout(() => {
@@ -2109,19 +2108,19 @@ function startReading() {
         }, 600);
     }
     
-    console.log('✅ Started reading - showing page 1');
+    log.info('✅ Started reading - showing page 1');
 }
 
 function nextPage() {
     // Prevent multiple clicks during animation
     if (isAnimating) {
-        console.log('Animation in progress, ignoring click');
+        log.info('Animation in progress, ignoring click');
         return;
     }
     
     // Check bounds
     if (currentPage >= totalPages) {
-        console.log('Already at last page');
+        log.info('Already at last page');
         return;
     }
     
@@ -2130,13 +2129,13 @@ function nextPage() {
     const nextPageEl = document.getElementById(`page${currentPage + 1}`);
     
     if (!currentPageEl || !nextPageEl) {
-        console.error('Page elements not found');
+        log.error('Page elements not found');
         return;
     }
     
     // Set animating flag
     isAnimating = true;
-    console.log('Starting next page animation');
+    log.info('Starting next page animation');
     
     // Disable buttons during animation
     updateNavigation();
@@ -2158,7 +2157,7 @@ function nextPage() {
             nextPageEl.style.animation = '';
             isAnimating = false; // Reset flag after FULL animation completes
             updateNavigation(); // Re-enable buttons after animation
-            console.log('Animation complete, buttons re-enabled');
+            log.info('Animation complete, buttons re-enabled');
         }, 600);
     }, 600);
 }
@@ -2166,13 +2165,13 @@ function nextPage() {
 function previousPage() {
     // Prevent multiple clicks during animation
     if (isAnimating) {
-        console.log('Animation in progress, ignoring click');
+        log.info('Animation in progress, ignoring click');
         return;
     }
     
     // Check bounds
     if (currentPage <= 0) {
-        console.log('Already at first page');
+        log.info('Already at first page');
         return;
     }
     
@@ -2181,13 +2180,13 @@ function previousPage() {
     const prevPageEl = document.getElementById(currentPage - 1 === 0 ? 'coverPage' : `page${currentPage - 1}`);
     
     if (!currentPageEl || !prevPageEl) {
-        console.error('Page elements not found');
+        log.error('Page elements not found');
         return;
     }
     
     // Set animating flag
     isAnimating = true;
-    console.log('Starting previous page animation');
+    log.info('Starting previous page animation');
     
     // Disable buttons during animation
     updateNavigation();
@@ -2209,7 +2208,7 @@ function previousPage() {
             prevPageEl.style.animation = '';
             isAnimating = false; // Reset flag after FULL animation completes
             updateNavigation(); // Re-enable buttons after animation
-            console.log('Animation complete, buttons re-enabled');
+            log.info('Animation complete, buttons re-enabled');
         }, 600);
     }, 600);
 }
@@ -2281,19 +2280,19 @@ function updateNavigation() {
 
 // Favorite functionality - DATABASE VERSION
 async function toggleFavorite() {
-    console.log('💖 Toggle favorite clicked');
-    console.log('📌 Current story data:', window.currentStoryData);
+    log.info('💖 Toggle favorite clicked');
+    log.info('📌 Current story data:', window.currentStoryData);
     
     if (!window.currentStoryData) {
-        console.error('❌ No currentStoryData found!');
+        log.error('❌ No currentStoryData found!');
         showCharacterMessage("⚠️ Please generate a story first!");
         setTimeout(() => hideCharacterMessage(), 3000);
         return;
     }
     
     if (!window.currentStoryData.story_id) {
-        console.error('❌ No story_id found in currentStoryData!');
-        console.error('Available keys:', Object.keys(window.currentStoryData));
+        log.error('❌ No story_id found in currentStoryData!');
+        log.error('Available keys:', Object.keys(window.currentStoryData));
         showCharacterMessage("⚠️ Story was not saved properly. Please generate a new story.");
         setTimeout(() => hideCharacterMessage(), 3000);
         return;
@@ -2301,7 +2300,7 @@ async function toggleFavorite() {
     
     try {
         const storyId = window.currentStoryData.story_id;
-        console.log('📤 Sending favorite request for story ID:', storyId);
+        log.info('📤 Sending favorite request for story ID:', storyId);
         
         const response = await fetch(`${API_BASE_URL}/stories/${storyId}/favorite`, {
             method: 'POST',
@@ -2310,12 +2309,12 @@ async function toggleFavorite() {
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('❌ Server error:', errorText);
+            log.error('❌ Server error:', errorText);
             throw new Error('Failed to toggle favorite');
         }
         
         const data = await response.json();
-        console.log('✅ Favorite response:', data);
+        log.info('✅ Favorite response:', data);
         
         // Store the favorite status
         window.currentStoryData.is_favorite = data.is_favorite;
@@ -2333,7 +2332,7 @@ async function toggleFavorite() {
         }, 2000);
         
     } catch (error) {
-        console.error('❌ Error toggling favorite:', error);
+        log.error('❌ Error toggling favorite:', error);
         showCharacterMessage("⚠️ Error updating favorite. Check console for details.");
         setTimeout(() => hideCharacterMessage(), 3000);
     }
@@ -2345,16 +2344,16 @@ async function updateFavoriteButton() {
     const favoriteText = document.getElementById('favoriteText');
     
     if (!favoriteBtn || !favoriteIcon || !favoriteText) {
-        console.log('⚠️ Favorite button elements not found');
+        log.info('⚠️ Favorite button elements not found');
         return;
     }
     
-    console.log('🔄 Updating favorite button...');
-    console.log('📌 Current story data:', window.currentStoryData);
+    log.info('🔄 Updating favorite button...');
+    log.info('📌 Current story data:', window.currentStoryData);
     
     // Check if story has been saved and has an ID
     if (!window.currentStoryData || !window.currentStoryData.story_id) {
-        console.log('⚠️ No story_id - showing default state');
+        log.info('⚠️ No story_id - showing default state');
         // Show default state - ready to favorite
         favoriteIcon.textContent = '🤍';
         favoriteText.textContent = 'Add to Favorites';
@@ -2369,7 +2368,7 @@ async function updateFavoriteButton() {
     try {
         // Fetch current favorite status from database
         const storyId = window.currentStoryData.story_id;
-        console.log('📤 Fetching favorite status for story ID:', storyId);
+        log.info('📤 Fetching favorite status for story ID:', storyId);
         
         const response = await fetch(`${API_BASE_URL}/stories/${storyId}`);
         
@@ -2377,7 +2376,7 @@ async function updateFavoriteButton() {
             const storyData = await response.json();
             const isFavorite = storyData.is_favorite || false;
             
-            console.log('✅ Favorite status:', isFavorite);
+            log.info('✅ Favorite status:', isFavorite);
             
             if (isFavorite) {
                 // Already favorited - show red filled heart
@@ -2401,10 +2400,10 @@ async function updateFavoriteButton() {
                 favoriteBtn.style.boxShadow = '0 4px 12px rgba(236,72,153,0.4)';
             }
         } else {
-            console.error('❌ Failed to fetch story:', response.status);
+            log.error('❌ Failed to fetch story:', response.status);
         }
     } catch (error) {
-        console.error('❌ Error checking favorite status:', error);
+        log.error('❌ Error checking favorite status:', error);
         // Default to not favorited
         favoriteIcon.textContent = '🤍';
         favoriteText.textContent = 'Add to Favorites';
@@ -2528,7 +2527,7 @@ async function showFavorites() {
         document.body.insertAdjacentHTML('beforeend', favoritesHTML);
         
     } catch (error) {
-        console.error('Error loading favorites:', error);
+        log.error('Error loading favorites:', error);
         showCharacterMessage("⚠️ Error loading favorites");
         setTimeout(() => hideCharacterMessage(), 2000);
     }
@@ -2544,7 +2543,7 @@ function closeFavoritesModal(event) {
 // Load favorite story from database
 async function loadFavoriteStory(storyId) {
     try {
-        console.log('📖 Loading favorite story:', storyId);
+        log.info('📖 Loading favorite story:', storyId);
         
         // Close the favorites modal
         closeFavoritesModal();
@@ -2558,24 +2557,24 @@ async function loadFavoriteStory(storyId) {
         const storyData = await response.json();
         storyData.story_id = storyId;
         
-        console.log('✅ Story loaded:', storyData.title);
+        log.info('✅ Story loaded:', storyData.title);
         
         // Set as current story
         window.currentStoryData = storyData;
         window._storyViewSource = 'favoritesModal';
         
         // Navigate to storyView section
-        console.log('🔄 Navigating to storyView section');
+        log.info('🔄 Navigating to storyView section');
         showSection('storyView');
         
         // Wait a moment for section to be visible, then display story
         setTimeout(() => {
-            console.log('📚 Calling displayStoryInView');
+            log.info('📚 Calling displayStoryInView');
             displayStoryInView(storyData);
         }, 300);
         
     } catch (error) {
-        console.error('❌ Error loading favorite story:', error);
+        log.error('❌ Error loading favorite story:', error);
         showCharacterMessage("⚠️ Error loading story: " + error.message);
         setTimeout(() => hideCharacterMessage(), 3000);
     }
@@ -2599,7 +2598,7 @@ async function removeFavorite(storyId) {
         setTimeout(() => hideCharacterMessage(), 2000);
         
     } catch (error) {
-        console.error('Error removing favorite:', error);
+        log.error('Error removing favorite:', error);
         showCharacterMessage("⚠️ Error removing favorite");
         setTimeout(() => hideCharacterMessage(), 2000);
     }
@@ -2615,7 +2614,7 @@ async function testConnection() {
     debugResult.style.color = 'blue';
     
     try {
-        console.log('🔧 Testing connection to:', API_BASE_URL);
+        log.info('🔧 Testing connection to:', API_BASE_URL);
         
         // Test basic API endpoint
         const response = await fetch(`${API_BASE_URL}/debug-cors`, {
@@ -2623,7 +2622,7 @@ async function testConnection() {
             mode: 'cors'
         });
         
-        console.log('📡 Debug response:', response.status, response.statusText);
+        log.info('📡 Debug response:', response.status, response.statusText);
         
         if (response.ok) {
             const data = await response.json();
@@ -2634,7 +2633,7 @@ async function testConnection() {
             debugResult.style.color = 'red';
         }
     } catch (error) {
-        console.error('❌ Debug test failed:', error);
+        log.error('❌ Debug test failed:', error);
         debugResult.innerHTML = `❌ Connection error: ${error.message}`;
         debugResult.style.color = 'red';
     }
@@ -2643,12 +2642,12 @@ async function testConnection() {
 
 // FAQ Toggle Function
 function toggleFAQ(element) {
-    console.log('🔄 FAQ clicked', element);
+    log.info('🔄 FAQ clicked', element);
     
     try {
         const answer = element.querySelector('.faq-answer');
         if (!answer) {
-            console.error('❌ FAQ answer not found');
+            log.error('❌ FAQ answer not found');
             return;
         }
         
@@ -2664,7 +2663,7 @@ function toggleFAQ(element) {
         }
         
         if (!icon) {
-            console.error('❌ FAQ icon not found');
+            log.error('❌ FAQ icon not found');
             return;
         }
         
@@ -2673,15 +2672,15 @@ function toggleFAQ(element) {
             answer.style.display = 'block';
             icon.textContent = '−';
             element.style.transform = 'scale(1.02)';
-            console.log('✅ FAQ expanded');
+            log.info('✅ FAQ expanded');
         } else {
             answer.style.display = 'none';
             icon.textContent = '+';
             element.style.transform = 'scale(1)';
-            console.log('✅ FAQ collapsed');
+            log.info('✅ FAQ collapsed');
         }
     } catch (error) {
-        console.error('❌ Error in toggleFAQ:', error);
+        log.error('❌ Error in toggleFAQ:', error);
     }
 }
 
@@ -2692,4 +2691,5 @@ function scrollToHowItWorks() {
         section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 }
+
 
