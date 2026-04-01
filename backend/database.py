@@ -43,10 +43,13 @@ def init_database() -> None:
         if USE_POSTGRES:
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS users (
-                    id       SERIAL PRIMARY KEY,
-                    username TEXT NOT NULL UNIQUE,
-                    password TEXT NOT NULL,
-                    date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    id         SERIAL PRIMARY KEY,
+                    username   TEXT NOT NULL UNIQUE,
+                    email      TEXT NOT NULL UNIQUE,
+                    first_name TEXT NOT NULL,
+                    last_name  TEXT NOT NULL,
+                    password   TEXT NOT NULL,
+                    date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
             cur.execute("""
@@ -72,10 +75,13 @@ def init_database() -> None:
         else:
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS users (
-                    id       INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username TEXT NOT NULL UNIQUE,
-                    password TEXT NOT NULL,
-                    date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username   TEXT NOT NULL UNIQUE,
+                    email      TEXT NOT NULL UNIQUE,
+                    first_name TEXT NOT NULL,
+                    last_name  TEXT NOT NULL,
+                    password   TEXT NOT NULL,
+                    date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             """)
             cur.execute("""
@@ -179,21 +185,21 @@ def save_story(name: str, theme: str, story_data: dict) -> int:
         conn.close()
 
 
-def create_user(username: str, hashed_password: str) -> int:
-    """Create a new user. Returns user ID. Raises on duplicate username."""
+def create_user(username: str, hashed_password: str, email: str = "", first_name: str = "", last_name: str = "") -> int:
+    """Create a new user. Returns user ID. Raises on duplicate username/email."""
     conn = get_conn()
     try:
         cur = conn.cursor()
         if USE_POSTGRES:
             cur.execute(
-                "INSERT INTO users (username, password) VALUES (%s, %s) RETURNING id",
-                (username, hashed_password)
+                "INSERT INTO users (username, email, first_name, last_name, password) VALUES (%s, %s, %s, %s, %s) RETURNING id",
+                (username, email, first_name, last_name, hashed_password)
             )
             user_id = cur.fetchone()[0]
         else:
             cur.execute(
-                "INSERT INTO users (username, password) VALUES (?, ?)",
-                (username, hashed_password)
+                "INSERT INTO users (username, email, first_name, last_name, password) VALUES (?, ?, ?, ?, ?)",
+                (username, email, first_name, last_name, hashed_password)
             )
             user_id = cur.lastrowid
         conn.commit()
@@ -208,12 +214,29 @@ def get_user_by_username(username: str) -> dict | None:
     try:
         cur = conn.cursor()
         if USE_POSTGRES:
-            cur.execute("SELECT id, username, password FROM users WHERE username = %s", (username,))
+            cur.execute("SELECT id, username, password, first_name FROM users WHERE username = %s", (username,))
         else:
-            cur.execute("SELECT id, username, password FROM users WHERE username = ?", (username,))
+            cur.execute("SELECT id, username, password, first_name FROM users WHERE username = ?", (username,))
         row = cur.fetchone()
         if row:
-            return {"id": row[0], "username": row[1], "password": row[2]}
+            return {"id": row[0], "username": row[1], "password": row[2], "first_name": row[3]}
+        return None
+    finally:
+        conn.close()
+
+
+def get_user_by_email(email: str) -> dict | None:
+    """Get user by email. Returns dict or None."""
+    conn = get_conn()
+    try:
+        cur = conn.cursor()
+        if USE_POSTGRES:
+            cur.execute("SELECT id, username, password, first_name FROM users WHERE email = %s", (email,))
+        else:
+            cur.execute("SELECT id, username, password, first_name FROM users WHERE email = ?", (email,))
+        row = cur.fetchone()
+        if row:
+            return {"id": row[0], "username": row[1], "password": row[2], "first_name": row[3]}
         return None
     finally:
         conn.close()

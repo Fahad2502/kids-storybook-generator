@@ -44,7 +44,43 @@ const Auth = {
     },
 };
 
-function switchAuthTab(tab) {
+function validateUsername(input) {
+    const val = input.value;
+    const hint = document.getElementById('usernameHint');
+    if (!hint) return;
+    if (val.length === 0) {
+        hint.style.color = 'rgba(229,241,251,0.4)';
+        hint.textContent = '3-20 characters, letters/numbers/underscore only';
+    } else if (!/^[a-zA-Z0-9_]{3,20}$/.test(val)) {
+        hint.style.color = '#f87171';
+        hint.textContent = val.length < 3 ? 'Too short' : val.length > 20 ? 'Too long' : 'Only letters, numbers, underscore allowed';
+        input.style.borderColor = '#f87171';
+    } else {
+        hint.style.color = '#34d399';
+        hint.textContent = '✓ Username looks good';
+        input.style.borderColor = '#34d399';
+    }
+}
+
+function checkPasswordStrength(pwd) {
+    const bars  = [document.getElementById('str1'), document.getElementById('str2'), document.getElementById('str3'), document.getElementById('str4')];
+    const label = document.getElementById('strLabel');
+    if (!bars[0] || !label) return;
+
+    let score = 0;
+    if (pwd.length >= 8)              score++;
+    if (/[A-Z]/.test(pwd))            score++;
+    if (/[0-9]/.test(pwd))            score++;
+    if (/[^A-Za-z0-9]/.test(pwd))     score++;
+
+    const colors = ['#f87171', '#fb923c', '#fbbf24', '#34d399'];
+    const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+    bars.forEach((b, i) => {
+        b.style.background = i < score ? colors[score - 1] : 'rgba(255,255,255,0.1)';
+    });
+    label.textContent = pwd.length > 0 ? labels[score - 1] || '' : '';
+    label.style.color = score > 0 ? colors[score - 1] : 'rgba(229,241,251,0.4)';
+}
     const loginForm    = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
     const tabLogin     = document.getElementById('tabLogin');
@@ -80,18 +116,21 @@ function togglePasswordVisibility(inputId, btn) {
 }
 async function handleRegister(e) {
     e.preventDefault();
-    const username = document.getElementById('regUsername').value.trim();
-    const password = document.getElementById('regPassword').value;
+    const first_name = document.getElementById('regFirstName').value.trim();
+    const last_name  = document.getElementById('regLastName').value.trim();
+    const email      = document.getElementById('regEmail').value.trim();
+    const username   = document.getElementById('regUsername').value.trim();
+    const password   = document.getElementById('regPassword').value;
     try {
         const r = await fetch(`${API_BASE_URL}/register`, {
             method: 'POST', headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({username, password})
+            body: JSON.stringify({first_name, last_name, email, username, password})
         });
         const data = await r.json();
         if (!r.ok) { showToast(data.detail || 'Registration failed', 'error'); return; }
         Auth.save(data.token, data.username);
         updateAuthUI();
-        showToast(`Welcome, ${data.username}! 🎉`, 'success');
+        showToast(`Welcome, ${data.first_name || data.username}! 🎉`, 'success');
         showSection('create');
     } catch { showToast('Connection error', 'error'); }
 }
