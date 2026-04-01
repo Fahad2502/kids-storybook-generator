@@ -9,11 +9,6 @@
     display: none !important;
 }
 
-/* Make sure create section is visible when not hidden */
-#create:not(.section-hidden) {
-    display: block !important;
-}
-
 /* --- Base & Body Styles (DARK THEME) --- */
 * {
     margin: 0;
