@@ -379,95 +379,95 @@
                 <form id="storyForm">
                     <!-- Character Name -->
                     <div class="form-group" style="margin-bottom: 28px; animation: slideIn 0.6s ease-out backwards; animation-delay: 0.1s;">
-                        <label for="characterName" style="display: block; font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 10px; letter-spacing: -0.01em; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Character Name</label>
+                        <label for="characterName" class="form-label-styled">Character Name</label>
                         <div style="position: relative;">
                             <input type="text" id="characterName" placeholder="Enter a name..." required autocomplete="off" style="width: 100%; padding: 14px 18px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 10px; font-size: 16px; font-family: inherit; color: #ffffff; transition: all 0.2s ease; background: rgba(118,75,162,0.25); backdrop-filter: blur(10px);">
                         </div>
-                        <div style="font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 8px;">This will be the hero of your story — for two characters write: <span style="color:#fbbf24; font-weight:600;">Ali, Sara</span></div>
+                        <div class="form-hint">This will be the hero of your story</div>
                     </div>
                     
-                    <div style="height: 1px; background: rgba(167,139,250,0.3); margin: 28px 0;"></div>
+                    <div class="divider-purple"></div>
                     
                     <!-- Character Age -->
                     <div class="form-group" style="margin-bottom: 28px; animation: slideIn 0.6s ease-out backwards; animation-delay: 0.2s;">
-                        <label style="display: block; font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 10px; letter-spacing: -0.01em; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Character Age</label>
+                        <label class="form-label-styled">Character Age</label>
                         <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px;">
-                            <button type="button" class="age-btn" data-age="2" onclick="selectAge(2)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">2</button>
-                            <button type="button" class="age-btn" data-age="3" onclick="selectAge(3)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">3</button>
-                            <button type="button" class="age-btn" data-age="4" onclick="selectAge(4)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">4</button>
-                            <button type="button" class="age-btn" data-age="5" onclick="selectAge(5)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">5</button>
-                            <button type="button" class="age-btn" data-age="6" onclick="selectAge(6)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">6</button>
-                            <button type="button" class="age-btn" data-age="7" onclick="selectAge(7)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">7</button>
-                            <button type="button" class="age-btn" data-age="8" onclick="selectAge(8)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">8</button>
-                            <button type="button" class="age-btn" data-age="9" onclick="selectAge(9)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">9</button>
-                            <button type="button" class="age-btn" data-age="10" onclick="selectAge(10)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">10</button>
-                            <button type="button" class="age-btn" data-age="11" onclick="selectAge(11)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">11</button>
-                            <button type="button" class="age-btn" data-age="12" onclick="selectAge(12)" style="padding: 14px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 16px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); font-family: inherit; position: relative; overflow: hidden; backdrop-filter: blur(10px);">12</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="2" onclick="selectAge(2)">2</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="3" onclick="selectAge(3)">3</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="4" onclick="selectAge(4)">4</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="5" onclick="selectAge(5)">5</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="6" onclick="selectAge(6)">6</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="7" onclick="selectAge(7)">7</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="8" onclick="selectAge(8)">8</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="9" onclick="selectAge(9)">9</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="10" onclick="selectAge(10)">10</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="11" onclick="selectAge(11)">11</button>
+                            <button type="button" class="age-btn age-btn-base" data-age="12" onclick="selectAge(12)">12</button>
                         </div>
                         <input type="hidden" id="characterAge" value="">
-                        <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-top: 6px;">Select your character's age</div>
+                        <div class="form-hint">Select your character's age</div>
                     </div>
                     
-                    <div style="height: 1px; background: rgba(167,139,250,0.3); margin: 28px 0;"></div>
+                    <div class="divider-purple"></div>
                     
                     <!-- Gender Selection -->
                     <div class="form-group" style="margin-bottom: 28px; animation: slideIn 0.6s ease-out backwards; animation-delay: 0.25s;">
-                        <label style="display: block; font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 10px; letter-spacing: -0.01em; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Main Character</label>
+                        <label class="form-label-styled">Main Character</label>
                         <div style="display: flex; gap: 10px;">
-                            <button type="button" class="gender-btn" data-gender="boy" onclick="selectGender('boy')" style="flex:1; padding: 12px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 15px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s ease; font-family: inherit;">👦 Boy</button>
-                            <button type="button" class="gender-btn" data-gender="girl" onclick="selectGender('girl')" style="flex:1; padding: 12px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 15px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s ease; font-family: inherit;">👧 Girl</button>
-                            <button type="button" class="gender-btn" data-gender="both" onclick="selectGender('both')" style="flex:1; padding: 12px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 15px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s ease; font-family: inherit;">👫 Both</button>
+                            <button type="button" class="gender-btn flex-select-btn" data-gender="boy" onclick="selectGender('boy')">👦 Boy</button>
+                            <button type="button" class="gender-btn flex-select-btn" data-gender="girl" onclick="selectGender('girl')">👧 Girl</button>
+                            <button type="button" class="gender-btn flex-select-btn" data-gender="both" onclick="selectGender('both')">👫 Both</button>
                         </div>
-                        <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-top: 6px;">Affects pronouns and characters in the story</div>
+                        <div class="form-hint">Affects pronouns and characters in the story</div>
                     </div>
 
                     <!-- Story Length Selection -->
                     <div class="form-group" style="margin-bottom: 28px; animation: slideIn 0.6s ease-out backwards; animation-delay: 0.28s;">
-                        <label style="display: block; font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 10px; letter-spacing: -0.01em; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Story Length</label>
+                        <label class="form-label-styled">Story Length</label>
                         <div style="display: flex; gap: 10px;">
-                            <button type="button" class="length-btn" data-length="short" onclick="selectLength('short')" style="flex:1; padding: 12px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 15px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s ease; font-family: inherit;">⚡ Short<br><span style="font-size:11px;opacity:0.8">3 pages</span></button>
-                            <button type="button" class="length-btn" data-length="medium" onclick="selectLength('medium')" style="flex:1; padding: 12px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 15px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s ease; font-family: inherit;">📖 Medium<br><span style="font-size:11px;opacity:0.8">5 pages</span></button>
-                            <button type="button" class="length-btn" data-length="long" onclick="selectLength('long')" style="flex:1; padding: 12px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 8px; background: rgba(118,75,162,0.25); font-size: 15px; font-weight: 600; color: #ffffff; cursor: pointer; transition: all 0.2s ease; font-family: inherit;">📚 Long<br><span style="font-size:11px;opacity:0.8">8 pages</span></button>
+                            <button type="button" class="length-btn flex-select-btn" data-length="short" onclick="selectLength('short')">⚡ Short<br><span style="font-size:11px;opacity:0.8">3 pages</span></button>
+                            <button type="button" class="length-btn flex-select-btn" data-length="medium" onclick="selectLength('medium')">📖 Medium<br><span style="font-size:11px;opacity:0.8">5 pages</span></button>
+                            <button type="button" class="length-btn flex-select-btn" data-length="long" onclick="selectLength('long')">📚 Long<br><span style="font-size:11px;opacity:0.8">8 pages</span></button>
                         </div>
-                        <div style="font-size: 13px; color: rgba(255,255,255,0.9); margin-top: 6px;">Choose how long the story should be</div>
+                        <div class="form-hint">Choose how long the story should be</div>
                     </div>
 
-                    <div style="height: 1px; background: rgba(167,139,250,0.3); margin: 28px 0;"></div>
+                    <div class="divider-purple"></div>
                     
                     <!-- Theme Selection -->
                     <div class="form-group" style="margin-bottom: 0; animation: slideIn 0.6s ease-out backwards; animation-delay: 0.3s;">
-                        <label style="display: block; font-size: 16px; font-weight: 600; color: #ffffff; margin-bottom: 10px; letter-spacing: -0.01em; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Story Theme</label>
+                        <label class="form-label-styled">Story Theme</label>
                         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-                            <div class="theme-card" data-theme="adventure" onclick="selectTheme(this)" style="padding: 22px 18px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 12px; background: rgba(118,75,162,0.25); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px);">
+                            <div class="theme-card theme-card-base" data-theme="adventure" onclick="selectTheme(this)">
                                 <span style="font-size: 36px; margin-bottom: 10px; display: block; transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);">🏔️</span>
                                 <div style="font-size: 15px; font-weight: 600; color: #ffffff;">Adventure</div>
                             </div>
-                            <div class="theme-card" data-theme="fantasy" onclick="selectTheme(this)" style="padding: 22px 18px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 12px; background: rgba(118,75,162,0.25); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px);">
+                            <div class="theme-card theme-card-base" data-theme="fantasy" onclick="selectTheme(this)">
                                 <span style="font-size: 36px; margin-bottom: 10px; display: block; transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);">🦄</span>
                                 <div style="font-size: 15px; font-weight: 600; color: #ffffff;">Fantasy</div>
                             </div>
-                            <div class="theme-card" data-theme="space" onclick="selectTheme(this)" style="padding: 22px 18px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 12px; background: rgba(118,75,162,0.25); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px);">
+                            <div class="theme-card theme-card-base" data-theme="space" onclick="selectTheme(this)">
                                 <span style="font-size: 36px; margin-bottom: 10px; display: block; transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);">🚀</span>
                                 <div style="font-size: 15px; font-weight: 600; color: #ffffff;">Space</div>
                             </div>
-                            <div class="theme-card" data-theme="ocean" onclick="selectTheme(this)" style="padding: 22px 18px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 12px; background: rgba(118,75,162,0.25); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px);">
+                            <div class="theme-card theme-card-base" data-theme="ocean" onclick="selectTheme(this)">
                                 <span style="font-size: 36px; margin-bottom: 10px; display: block; transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);">🌊</span>
                                 <div style="font-size: 15px; font-weight: 600; color: #ffffff;">Ocean</div>
                             </div>
-                            <div class="theme-card" data-theme="animals" onclick="selectTheme(this)" style="padding: 22px 18px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 12px; background: rgba(118,75,162,0.25); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px);">
+                            <div class="theme-card theme-card-base" data-theme="animals" onclick="selectTheme(this)">
                                 <span style="font-size: 36px; margin-bottom: 10px; display: block; transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);">🦁</span>
                                 <div style="font-size: 15px; font-weight: 600; color: #ffffff;">Animals</div>
                             </div>
-                            <div class="theme-card" data-theme="friendship" onclick="selectTheme(this)" style="padding: 22px 18px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 12px; background: rgba(118,75,162,0.25); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px);">
+                            <div class="theme-card theme-card-base" data-theme="friendship" onclick="selectTheme(this)">
                                 <span style="font-size: 36px; margin-bottom: 10px; display: block; transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);">🤝</span>
                                 <div style="font-size: 15px; font-weight: 600; color: #ffffff;">Friendship</div>
                             </div>
-                            <div class="theme-card" data-theme="custom" onclick="selectTheme(this)" style="padding: 22px 18px; border: 1.5px solid rgba(167,139,250,0.4); border-radius: 12px; background: rgba(118,75,162,0.25); cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; position: relative; overflow: hidden; backdrop-filter: blur(10px);">
+                            <div class="theme-card theme-card-base" data-theme="custom" onclick="selectTheme(this)">
                                 <span style="font-size: 36px; margin-bottom: 10px; display: block; transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);">✨</span>
                                 <div style="font-size: 15px; font-weight: 600; color: #ffffff;">Custom</div>
                             </div>
                         </div>
-                        <div style="font-size: 14px; color: rgba(255,255,255,0.9); margin-top: 8px;">Choose the type of adventure</div>
+                        <div class="form-hint">Choose the type of adventure</div>
                         
                         <!-- Custom Theme Input (hidden by default) -->
                         <div id="customThemeInput" style="display: none; margin-top: 16px; animation: slideIn 0.3s ease-out;">
@@ -535,13 +535,13 @@
             <!-- Theme Filter Pills -->
             <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
                 <button class="theme-filter-pill active-pill" data-filter="all" onclick="setThemeFilter('all', this)" style="padding: 7px 16px; border-radius: 20px; border: 1.5px solid #a78bfa; background: rgba(167,139,250,0.2); color: #e5f1fb; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease;">All</button>
-                <button class="theme-filter-pill" data-filter="adventure" onclick="setThemeFilter('adventure', this)" style="padding: 7px 16px; border-radius: 20px; border: 1.5px solid rgba(167,139,250,0.25); background: transparent; color: rgba(229,241,251,0.7); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease;">🏔️ Adventure</button>
-                <button class="theme-filter-pill" data-filter="fantasy" onclick="setThemeFilter('fantasy', this)" style="padding: 7px 16px; border-radius: 20px; border: 1.5px solid rgba(167,139,250,0.25); background: transparent; color: rgba(229,241,251,0.7); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease;">🦄 Fantasy</button>
-                <button class="theme-filter-pill" data-filter="space" onclick="setThemeFilter('space', this)" style="padding: 7px 16px; border-radius: 20px; border: 1.5px solid rgba(167,139,250,0.25); background: transparent; color: rgba(229,241,251,0.7); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease;">🚀 Space</button>
-                <button class="theme-filter-pill" data-filter="ocean" onclick="setThemeFilter('ocean', this)" style="padding: 7px 16px; border-radius: 20px; border: 1.5px solid rgba(167,139,250,0.25); background: transparent; color: rgba(229,241,251,0.7); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease;">🌊 Ocean</button>
-                <button class="theme-filter-pill" data-filter="animals" onclick="setThemeFilter('animals', this)" style="padding: 7px 16px; border-radius: 20px; border: 1.5px solid rgba(167,139,250,0.25); background: transparent; color: rgba(229,241,251,0.7); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease;">🦁 Animals</button>
-                <button class="theme-filter-pill" data-filter="friendship" onclick="setThemeFilter('friendship', this)" style="padding: 7px 16px; border-radius: 20px; border: 1.5px solid rgba(167,139,250,0.25); background: transparent; color: rgba(229,241,251,0.7); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease;">🤝 Friendship</button>
-                <button class="theme-filter-pill" data-filter="custom" onclick="setThemeFilter('custom', this)" style="padding: 7px 16px; border-radius: 20px; border: 1.5px solid rgba(167,139,250,0.25); background: transparent; color: rgba(229,241,251,0.7); font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; transition: all 0.2s ease;">✨ Custom</button>
+                <button class="theme-filter-pill pill-inactive" data-filter="adventure" onclick="setThemeFilter('adventure', this)">🏔️ Adventure</button>
+                <button class="theme-filter-pill pill-inactive" data-filter="fantasy" onclick="setThemeFilter('fantasy', this)">🦄 Fantasy</button>
+                <button class="theme-filter-pill pill-inactive" data-filter="space" onclick="setThemeFilter('space', this)">🚀 Space</button>
+                <button class="theme-filter-pill pill-inactive" data-filter="ocean" onclick="setThemeFilter('ocean', this)">🌊 Ocean</button>
+                <button class="theme-filter-pill pill-inactive" data-filter="animals" onclick="setThemeFilter('animals', this)">🦁 Animals</button>
+                <button class="theme-filter-pill pill-inactive" data-filter="friendship" onclick="setThemeFilter('friendship', this)">🤝 Friendship</button>
+                <button class="theme-filter-pill pill-inactive" data-filter="custom" onclick="setThemeFilter('custom', this)">✨ Custom</button>
             </div>
 
             <!-- Professional Search & Sort Bar -->
@@ -673,20 +673,20 @@
         </div>
 
         <!-- What makes it AI -->
-        <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 36px; margin-bottom: 40px; backdrop-filter: blur(10px);">
+        <div class="about-glass-card">
             <h3 style="color: #ffffff; font-size: 1.6rem; margin-bottom: 24px; text-align: center;">🤖 The AI Behind the Stories</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
-                <div style="background: rgba(139,110,234,0.2); border-radius: 14px; padding: 24px; border: 1px solid rgba(167,139,250,0.3);">
+                <div class="about-feature-card">
                     <div style="font-size: 2rem; margin-bottom: 12px;">📖</div>
                     <h4 style="color: #e9d5ff; margin-bottom: 8px; font-size: 1.1rem;">Story Generation</h4>
                     <p style="color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.7;">Powered by Llama 3.3 70B via Groq API. Stories follow a real narrative arc — setup, wrong choice, consequence, realization, resolution — inspired by classic fables.</p>
                 </div>
-                <div style="background: rgba(139,110,234,0.2); border-radius: 14px; padding: 24px; border: 1px solid rgba(167,139,250,0.3);">
+                <div class="about-feature-card">
                     <div style="font-size: 2rem; margin-bottom: 12px;">🎨</div>
                     <h4 style="color: #e9d5ff; margin-bottom: 8px; font-size: 1.1rem;">Image Generation</h4>
                     <p style="color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.7;">Each page gets a unique illustration using FLUX.1 image models. Scene prompts are extracted per page using a lightweight 8B model. Images are stored permanently via Cloudinary.</p>
                 </div>
-                <div style="background: rgba(139,110,234,0.2); border-radius: 14px; padding: 24px; border: 1px solid rgba(167,139,250,0.3);">
+                <div class="about-feature-card">
                     <div style="font-size: 2rem; margin-bottom: 12px;">🔬</div>
                     <h4 style="color: #e9d5ff; margin-bottom: 8px; font-size: 1.1rem;">Fine-tuned Model</h4>
                     <p style="color: rgba(255,255,255,0.75); font-size: 0.95rem; line-height: 1.7;">We fine-tuned GPT-2 on 50,000 children's stories from the TinyStories dataset. Our model achieved perplexity of 3.68 vs base GPT-2's 10.44 — a 2.8× improvement in children's story generation.</p>
@@ -695,35 +695,35 @@
         </div>
 
         <!-- Tech stack -->
-        <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 36px; margin-bottom: 40px; backdrop-filter: blur(10px);">
+        <div class="about-glass-card">
             <h3 style="color: #ffffff; font-size: 1.6rem; margin-bottom: 24px; text-align: center;">🛠️ Technology Stack</h3>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-                <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
+                <div class="tech-stack-card">
                     <div style="font-size: 1.8rem; margin-bottom: 8px;">⚡</div>
                     <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">FastAPI</div>
                     <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">Python backend</div>
                 </div>
-                <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
+                <div class="tech-stack-card">
                     <div style="font-size: 1.8rem; margin-bottom: 8px;">🧠</div>
                     <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">Groq API</div>
                     <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">LLM inference</div>
                 </div>
-                <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
+                <div class="tech-stack-card">
                     <div style="font-size: 1.8rem; margin-bottom: 8px;">🤗</div>
                     <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">HuggingFace</div>
                     <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">Models &amp; datasets</div>
                 </div>
-                <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
+                <div class="tech-stack-card">
                     <div style="font-size: 1.8rem; margin-bottom: 8px;">🖼️</div>
                     <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">FLUX.1 + Cloudinary</div>
                     <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">Image generation &amp; storage</div>
                 </div>
-                <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
+                <div class="tech-stack-card">
                     <div style="font-size: 1.8rem; margin-bottom: 8px;">🗄️</div>
                     <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">SQLite / PostgreSQL</div>
                     <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">Story database</div>
                 </div>
-                <div style="background: rgba(118,75,162,0.25); border-radius: 12px; padding: 18px; text-align: center; border: 1px solid rgba(167,139,250,0.2);">
+                <div class="tech-stack-card">
                     <div style="font-size: 1.8rem; margin-bottom: 8px;">🔊</div>
                     <div style="color: #e9d5ff; font-weight: 600; font-size: 0.95rem;">Web Speech API</div>
                     <div style="color: rgba(255,255,255,0.6); font-size: 0.8rem; margin-top: 4px;">Text-to-speech</div>
@@ -732,7 +732,7 @@
         </div>
 
         <!-- Team -->
-        <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; padding: 36px; backdrop-filter: blur(10px); text-align: center;">
+        <div class="about-glass-card" style="text-align: center;">
             <h3 style="color: #ffffff; font-size: 1.6rem; margin-bottom: 8px;">👨‍💻 Final Year Project</h3>
             <p style="color: rgba(255,255,255,0.7); margin-bottom: 28px; font-size: 0.95rem;">BE — Artificial Intelligence &amp; Data Science</p>
             <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
@@ -828,6 +828,6 @@
 
     <div id="toast-container"></div>
 
-    <script src="js/script.js?v=TTS_V76"></script>
+    <script src="js/script.js?v=TTS_V75"></script>
 </body>
 </html>

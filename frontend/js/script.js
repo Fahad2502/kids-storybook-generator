@@ -1014,13 +1014,13 @@ function displayStory(storyData) {
                             <div style="position: absolute; right: 0; top: 0; width: 40px; height: 100%; background: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.25) 70%, rgba(0,0,0,0.55) 100%); z-index: 2;"></div>
                         </div>
                         <!-- Right page: cream paper -->
-                        <div style="flex: 1; background: #fdf6e3; background-image: url('img/paper-texture.jpg'); background-size: cover; display: flex; flex-direction: column; justify-content: center; padding: 44px 40px 44px 50px; position: relative; overflow-y: auto;">
+                        <div style="flex: 1; background: #fdf6e3; background-image: url('img/paper-texture.jpg'); background-size: cover; display: flex; flex-direction: column; justify-content: center; padding: 44px 40px 44px 50px; position: relative; overflow: hidden;">
                             <!-- deep spine shadow — left edge of right page -->
                             <div style="position: absolute; left: 0; top: 0; width: 40px; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.18) 50%, transparent 100%); z-index: 2;"></div>
                             <!-- spine crease highlight line -->
                             <div style="position: absolute; left: 2px; top: 0; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.18) 30%, rgba(255,255,255,0.18) 70%, transparent); z-index: 3;"></div>
                             <div style="position: absolute; top: 14px; right: 18px; font-size: 0.95rem; color: #8b6f47; font-weight: 700; opacity: 0.55; z-index: 4;">${page.page_number}</div>
-                            <p style="font-size: 1.15rem; line-height: 2; color: #3d2b1f; font-weight: 500; margin: 0; position: relative; z-index: 1;">${page.text}</p>
+                            <p style="font-size: clamp(0.85rem, 1.1vw, 1.1rem); line-height: 1.75; color: #3d2b1f; font-weight: 500; margin: 0; position: relative; z-index: 1; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 14;">${page.text}</p>
                         </div>
                     </div>
                 </div>

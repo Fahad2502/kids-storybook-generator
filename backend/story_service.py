@@ -130,6 +130,27 @@ async def generate_ai_story(request: StoryRequest) -> dict:
         lesson_num = page_count + 1
         extra = f"\nExtra details to include: {request.extra_details}" if request.extra_details else ""
 
+        # Handle multiple names (e.g. "Ali, Sara" = two characters)
+        names = [n.strip() for n in request.name.split(",")]
+        if len(names) >= 2 and gender == "both":
+            char_intro = f"two friends named {names[0]} (boy) and {names[1]} (girl)"
+        elif len(names) >= 2:
+            char_intro = f"{names[0]} and {names[1]}"
+        else:
+            char_intro = request.name
+
+        # Story type variety — rotate through different narrative styles
+        story_types = [
+            ("mystery", "A mystery story — something strange or unexplained happens. Build suspense. The characters must investigate and solve it."),
+            ("adventure", "A classic adventure — the characters go on a journey, face real danger, and must be brave to succeed."),
+            ("moral", "A fable-style story — the character makes a wrong choice, faces consequences, and learns a meaningful lesson."),
+            ("funny", "A lighthearted, funny story — full of humor, silly situations, and a warm happy ending. Make the reader smile."),
+            ("spooky", "A spooky but age-appropriate story — mysterious atmosphere, a ghost or strange creature, tension that resolves safely."),
+            ("friendship", "A story about friendship being tested — a misunderstanding, a hard choice, and ultimately loyalty winning."),
+        ]
+        story_type_key, story_type_instruction = random.choice(story_types)
+        print(f"Story type: {story_type_key}")
+
         # Known themes use a concrete scenario seed.
         # Custom themes skip the seed so the AI uses the theme freely.
         theme_key = request.theme.lower()
@@ -149,20 +170,15 @@ async def generate_ai_story(request: StoryRequest) -> dict:
             print(f"Scenario: {scenario}")
 
         story_prompt = (
-            f"Write a children's story for a {request.age}-year-old named {request.name} ({pronoun_str} pronouns).\n\n"
+            f"Write a children's story for a {request.age}-year-old. Main character(s): {char_intro} ({pronoun_str} pronouns).\n\n"
+            f"STORY TYPE: {story_type_instruction}\n\n"
             f"{scenario_line}"
             f"{extra}\n\n"
-            f"STORY STRUCTURE - write exactly these 5 beats:\n"
-            f"BEAT 1 - SETUP: Describe {request.name}'s world with vivid sensory detail. Show the desire or situation clearly.\n"
-            f"BEAT 2 - WRONG CHOICE: {request.name} makes the wrong choice or gives in to temptation. Show WHY it felt right at the time.\n"
-            f"BEAT 3 - CONSEQUENCE: Something goes wrong because of that choice. {request.name} is in trouble, scared, or hurt. Make it feel real.\n"
-            f"BEAT 4 - REALIZATION: A moment of clarity through help, memory, or inner strength. {request.name} understands what they must do.\n"
-            f"BEAT 5 - EARNED RESOLUTION: {request.name} makes the right choice. The reward is meaningful and connected to the lesson.\n\n"
             f"WRITING STYLE:\n"
             f"- Include at least 3 lines of DIALOGUE (characters speaking to each other in quotes)\n"
-            f"- Use SENSORY DETAILS: what {request.name} smells, hears, feels, sees\n"
-            f"- Show emotions through body language: his hands trembled, her stomach dropped\n"
-            f"- The moral must come from the EVENTS, never write the lesson is or he learned that\n"
+            f"- Use SENSORY DETAILS: what the characters smell, hear, feel, see\n"
+            f"- Show emotions through body language: hands trembled, stomach dropped\n"
+            f"- The moral (if any) must come from the EVENTS, never state it directly\n"
             f"- Simple words for age {request.age}, but real emotions and real stakes\n"
             f"- Length: {page_count * 5} to {page_count * 7} sentences\n\n"
             f"Write ONLY the story. No title, no labels, no JSON."
@@ -208,7 +224,7 @@ async def generate_ai_story(request: StoryRequest) -> dict:
             + '  "title": "create a short title from the story",\n'
             + '  "pages": [\n'
             + page_slots
-            + f'    {{"page_number": {lesson_num}, "text": "What {request.name} Learned\\n\\n🌟 [lesson from story]\\n\\n💫 [lesson from story]\\n\\n✨ [lesson from story]\\n\\n❤️ [warm closing]", "image_prompt": "warm closing scene", "emotion": "🌟"}}\n'
+            + f'    {{"page_number": {lesson_num}, "text": "What {char_intro} Learned\\n\\n🌟 [lesson from story]\\n\\n💫 [lesson from story]\\n\\n✨ [lesson from story]\\n\\n❤️ [warm closing]", "image_prompt": "warm closing scene", "emotion": "🌟"}}\n'
             + '  ]\n'
             + '}\n\n'
             + "Copy the story text exactly. Split at paragraph breaks. Return ONLY the JSON."
