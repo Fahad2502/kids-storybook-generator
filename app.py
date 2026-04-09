@@ -22,10 +22,10 @@ async def lifespan(app: FastAPI):
     mode = "FREE TEMPLATE MODE" if USE_FREE_MODE else "GROQ AI MODE (llama-3.3-70b)"
     port = os.getenv("PORT", "8025")
     print(f"\n{'='*55}")
-    print(f"Kids Story Generator started")
-    print(f"Story mode : {mode}")
-    print(f"Image mode : {IMAGE_MODE}")
-    print(f"URL        : http://localhost:{port}")
+    print(f"🚀  Kids Story Generator started")
+    print(f"📖  Story mode : {mode}")
+    print(f"🖼️   Image mode : {IMAGE_MODE}")
+    print(f"🌐  URL        : http://localhost:{port}")
     print(f"{'='*55}\n")
     yield
 
