@@ -225,24 +225,21 @@ async def generate_ai_story(request: StoryRequest) -> dict:
             for i in range(1, page_count + 1)
         ])
         system_msg = (
-            "You are a JSON formatter. Your ONLY job is to split a story into pages and output JSON. "
-            "You must COPY the story text word-for-word into the pages. "
-            "Do NOT rewrite, summarize, or change any words. "
-            "Do NOT add new sentences. Only split and copy. "
-            "For emotion: pick ONE emoji from the allowed list that matches the mood of that page."
+            "You are a JSON formatter. Split a story into pages. "
+            "COPY the story text exactly. Do NOT rewrite anything. "
+            "Return ONLY valid JSON. No markdown, no extra text."
         )
         format_prompt = (
             f"Split the story below into exactly {page_count} pages, then add a lesson page {lesson_num}.\n\n"
-            f"STORY TO SPLIT:\n---\n{story_text}\n---\n\n"
-            f"OUTPUT this exact JSON structure with the story text copied in:\n"
+            f"STORY:\n---\n{story_text}\n---\n\n"
+            f"Return ONLY this JSON (no markdown, no extra text):\n"
             + '{\n'
-            + '  "title": "create a short title from the story",\n'
+            + '  "title": "short title from the story",\n'
             + '  "pages": [\n'
             + page_slots
-            + f'    {{"page_number": {lesson_num}, "text": "What {char_intro} Learned\\n\\n🌟 [lesson from story]\\n\\n💫 [lesson from story]\\n\\n✨ [lesson from story]\\n\\n❤️ [warm closing]", "image_prompt": "warm closing scene", "emotion": "🌟"}}\n'
+            + f'    {{"page_number": {lesson_num}, "text": "What {char_intro} Learned. [4 lessons from the story]", "image_prompt": "warm closing scene"}}\n'
             + '  ]\n'
-            + '}\n\n'
-            + "Copy the story text exactly. Split at paragraph breaks. Return ONLY the JSON."
+            + '}'
         )
 
         response = None
