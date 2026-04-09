@@ -1,6 +1,6 @@
 """
 app.py -- FastAPI application entry point
-Local:      venv\Scripts\python -X utf8 app.py
+Local:      python -X utf8 app.py
 Production: uvicorn app:app --host 0.0.0.0 --port $PORT --workers 4
 """
 import os
