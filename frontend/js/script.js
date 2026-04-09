@@ -106,14 +106,19 @@ function switchAuthTab(tab) {
     const registerForm = document.getElementById('registerForm');
     const tabLogin     = document.getElementById('tabLogin');
     const tabRegister  = document.getElementById('tabRegister');
-    if (!loginForm || !registerForm) return;
+    if (!loginForm || !registerForm) {
+        // Auth section not visible yet, retry after render
+        setTimeout(() => switchAuthTab(tab), 50);
+        return;
+    }
+    // Clear both forms first
+    loginForm.style.display    = 'none';
+    registerForm.style.display = 'none';
     if (tab === 'login') {
-        loginForm.style.display    = 'block';
-        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
         if (tabLogin)    { tabLogin.style.background = 'linear-gradient(135deg,#06b6d4,#0891b2)'; tabLogin.style.color = 'white'; }
         if (tabRegister) { tabRegister.style.background = 'transparent'; tabRegister.style.color = 'rgba(229,241,251,0.5)'; }
     } else {
-        loginForm.style.display    = 'none';
         registerForm.style.display = 'block';
         if (tabRegister) { tabRegister.style.background = 'linear-gradient(135deg,#8b5cf6,#7c3aed)'; tabRegister.style.color = 'white'; }
         if (tabLogin)    { tabLogin.style.background = 'transparent'; tabLogin.style.color = 'rgba(229,241,251,0.5)'; }
