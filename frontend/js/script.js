@@ -120,6 +120,19 @@ function switchAuthTab(tab) {
         if (tabRegister) { tabRegister.style.background = 'transparent'; tabRegister.style.color = 'rgba(229,241,251,0.5)'; }
     } else {
         registerForm.style.display = 'block';
+        // Clear all register fields to prevent browser autofill showing
+        ['regFirstName','regLastName','regEmail','regUsername','regPassword'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        const hint = document.getElementById('usernameHint');
+        if (hint) hint.textContent = '3-20 chars, letters/numbers/underscore';
+        const strLabel = document.getElementById('strLabel');
+        if (strLabel) strLabel.textContent = '';
+        ['str1','str2','str3','str4'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.background = 'rgba(255,255,255,0.1)';
+        });
         if (tabRegister) { tabRegister.style.background = 'linear-gradient(135deg,#8b5cf6,#7c3aed)'; tabRegister.style.color = 'white'; }
         if (tabLogin)    { tabLogin.style.background = 'transparent'; tabLogin.style.color = 'rgba(229,241,251,0.5)'; }
     }

@@ -647,20 +647,20 @@
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
                         <div>
                             <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">First Name</label>
-                            <input id="regFirstName" type="text" placeholder="Ali" required style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                            <input id="regFirstName" type="text" placeholder="Ali" required autocomplete="off" style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
                         </div>
                         <div>
                             <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">Last Name</label>
-                            <input id="regLastName" type="text" placeholder="Khan" required style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                            <input id="regLastName" type="text" placeholder="Khan" required autocomplete="off" style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
                         </div>
                     </div>
                     <div style="margin-bottom:12px;">
                         <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">Email</label>
-                        <input id="regEmail" type="email" placeholder="ali@example.com" required style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                        <input id="regEmail" type="email" placeholder="ali@example.com" required autocomplete="off" style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
                     </div>
                     <div style="margin-bottom:12px;">
                         <label style="display:block; font-size:0.78rem; font-weight:600; color:rgba(229,241,251,0.7); margin-bottom:5px; letter-spacing:0.05em; text-transform:uppercase;">Username</label>
-                        <input id="regUsername" type="text" placeholder="ali_khan" required oninput="validateUsername(this)" style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
+                        <input id="regUsername" type="text" placeholder="ali_khan" required autocomplete="off" oninput="validateUsername(this)" style="width:100%; padding:11px 12px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(6,182,212,0.25); border-radius:10px; color:#e5f1fb; font-size:0.9rem; font-family:inherit; outline:none; box-sizing:border-box;" onfocus="this.style.borderColor='#06b6d4'" onblur="this.style.borderColor='rgba(6,182,212,0.25)'">
                         <div id="usernameHint" style="font-size:0.72rem; margin-top:4px; color:rgba(229,241,251,0.4);">3-20 chars, letters/numbers/underscore</div>
                     </div>
                     <div style="margin-bottom:8px;">
@@ -873,6 +873,7 @@
 
     <div id="toast-container"></div>
 
-    <script src="js/script.js?v=TTS_V84"></script>
+    <script src="js/script.js?v=TTS_V85"></script>
 </body>
 </html>
+
