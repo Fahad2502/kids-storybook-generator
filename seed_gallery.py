@@ -7,7 +7,7 @@ import httpx
 import asyncio
 import time
 
-API = "http://localhost:8025"
+API = "https://kids-story-generator-5due.onrender.com"
 
 STORIES = [
     {"name": "Ali",      "age": 7,  "theme": "adventure",  "gender": "boy",  "length": "medium"},

@@ -1,5 +1,7 @@
-// API Base URL - adjust this to match your backend
-const API_BASE_URL = 'http://localhost:8025';
+// API Base URL - auto-detects local vs production
+const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:8025'
+    : window.location.origin;
 
 // ── Logger — silent in production, active in development ─────────────────────
 const isDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
