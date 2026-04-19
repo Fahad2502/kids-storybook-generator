@@ -77,9 +77,9 @@ def init_database() -> None:
                 CREATE TABLE IF NOT EXISTS users (
                     id         INTEGER PRIMARY KEY AUTOINCREMENT,
                     username   TEXT NOT NULL UNIQUE,
-                    email      TEXT NOT NULL UNIQUE,
-                    first_name TEXT NOT NULL,
-                    last_name  TEXT NOT NULL,
+                    email      TEXT DEFAULT '' UNIQUE,
+                    first_name TEXT DEFAULT '',
+                    last_name  TEXT DEFAULT '',
                     password   TEXT NOT NULL,
                     date       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
