@@ -2,25 +2,23 @@
 auth.py -- JWT authentication helpers
 """
 import os
+import bcrypt
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from passlib.context import CryptContext
-from fastapi import HTTPException, Header
+from fastapi import HTTPException
 from typing import Optional
 
 SECRET_KEY = os.getenv("SECRET_KEY", "kids-story-secret-change-in-production-2025")
 ALGORITHM  = "HS256"
 TOKEN_EXPIRE_DAYS = 30
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=12)
-
 
 def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 
 def verify_password(plain: str, hashed: str) -> bool:
-    return pwd_context.verify(plain, hashed)
+    return bcrypt.checkpw(plain.encode('utf-8'), hashed.encode('utf-8'))
 
 
 def create_token(user_id: int, username: str) -> str:
