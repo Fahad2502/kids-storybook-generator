@@ -5,7 +5,7 @@ import os
 import bcrypt
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
-from fastapi import HTTPException
+from fastapi import HTTPException, Header
 from typing import Optional
 
 SECRET_KEY = os.getenv("SECRET_KEY", "kids-story-secret-change-in-production-2025")
