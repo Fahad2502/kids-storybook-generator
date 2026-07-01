@@ -106,25 +106,34 @@ async def _upload_to_cloudinary(image_source: str, story_id, page_num: int) -> s
 # ── Backends ──────────────────────────────────────────────────────────────────
 
 async def _generate_infip(prompt: str) -> tuple[str, str]:
-    """Ghostbot/infip.pro -- 1000 free images/day, fast 2-5s."""
+    """Ghostbot/infip.pro -- 1000 free images/day, fast 2-5s. Retries once on timeout."""
     if not INFIP_API_KEY:
         raise HTTPException(status_code=500,
                             detail="INFIP_API_KEY not set in .env")
-    print("Infip request...")
-    async with httpx.AsyncClient(timeout=60) as client:
-        r = await client.post(
-            "https://api.infip.pro/v1/images/generations",
-            headers={"Authorization": f"Bearer {INFIP_API_KEY}",
-                     "Content-Type": "application/json"},
-            json={"model": "img3", "prompt": prompt, "n": 1,
-                  "size": "1024x1024", "response_format": "url"},
-        )
-        if r.status_code != 200:
-            raise HTTPException(status_code=502,
-                                detail=f"Infip error {r.status_code}: {r.text[:200]}")
-        img_url = r.json()["data"][0]["url"]
-    print(f"Infip success")
-    return img_url, "url"
+    for attempt in range(2):
+        try:
+            print(f"Infip request (attempt {attempt + 1})...")
+            async with httpx.AsyncClient(timeout=90) as client:
+                r = await client.post(
+                    "https://api.infip.pro/v1/images/generations",
+                    headers={"Authorization": f"Bearer {INFIP_API_KEY}",
+                             "Content-Type": "application/json"},
+                    json={"model": "img3", "prompt": prompt, "n": 1,
+                          "size": "1024x1024", "response_format": "url"},
+                )
+                if r.status_code != 200:
+                    raise HTTPException(status_code=502,
+                                        detail=f"Infip error {r.status_code}: {r.text[:200]}")
+                img_url = r.json()["data"][0]["url"]
+            print("Infip success")
+            return img_url, "url"
+        except httpx.ReadTimeout:
+            print(f"Infip timeout on attempt {attempt + 1}")
+            if attempt == 1:
+                print("Infip failed twice, falling back to HuggingFace inference...")
+                return await _generate_inference(prompt)
+        except HTTPException:
+            raise
 
 
 async def _generate_gradio(prompt: str) -> tuple[str, str]:

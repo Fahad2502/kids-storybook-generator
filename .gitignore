@@ -1,32 +1,27 @@
-# Environment & secrets
-.env
-*.env
-
 # Python
 __pycache__/
 *.pyc
 *.pyo
-venv/
-.venv/
+*.pyd
+.Python
 *.egg-info/
 
-# Database (local only)
+# Virtual environment
+.venv/
+venv/
+
+# Secrets — NEVER commit these
+.env
+
+# Local database
 stories.db
-*.db
 
-# Generated images (stored in cloud on production)
-frontend/img/generated/*.jpg
-frontend/img/generated/*.png
-frontend/img/generated/*.webp
-
-# Model files (too large for GitHub)
-tinystories-gpt2-final/model.safetensors
-tinystories-gpt2-final/checkpoint-*/
+# Generated images (large binary files)
+frontend/img/generated/
 
 # IDE
 .idea/
 .vscode/
-*.swp
 
 # OS
 .DS_Store
