@@ -1,26 +1,36 @@
 """
-image_service.py -- Image generation backends:
-  infip     -- Ghostbot/infip.pro, 1000 free/day, fast 2-5s (default)
-  gradio    -- HuggingFace Spaces, free, slower
-  inference -- HuggingFace Inference API, free monthly credits
-Images are uploaded to Cloudinary for permanent storage.
+Image generation service.
+
+Supported backends (configured via IMAGE_MODE in .env):
+  infip     - infip.pro, up to 1000 free images/day, ~2-5s per image (default)
+  gradio    - HuggingFace Gradio Spaces, free with hourly GPU quota
+  inference - HuggingFace Inference API, free monthly credits
+
+Generated images are uploaded to Cloudinary for permanent storage.
 """
+
 import asyncio
 import base64
 import hashlib
 import httpx
 from pathlib import Path
+
 from fastapi import HTTPException
 
 from backend.config import (
-    USE_FREE_MODE, groq_client,
-    IMAGE_MODE, HUGGINGFACE_API_KEY, INFIP_API_KEY,
-    CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET,
-    IMAGES_DIR, GRADIO_SPACES,
+    CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET,
+    CLOUDINARY_CLOUD_NAME,
+    GRADIO_SPACES,
+    HUGGINGFACE_API_KEY,
+    IMAGE_MODE,
+    IMAGES_DIR,
+    INFIP_API_KEY,
+    USE_FREE_MODE,
+    groq_client,
 )
-from backend.database import save_image_url, get_image_url
+from backend.database import get_image_url, save_image_url
 
-# Configure Cloudinary if credentials are set
 if CLOUDINARY_CLOUD_NAME:
     import cloudinary
     import cloudinary.uploader
@@ -32,8 +42,6 @@ if CLOUDINARY_CLOUD_NAME:
     print(f"Cloudinary configured: {CLOUDINARY_CLOUD_NAME}")
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
 def _story_seed(story_id) -> int | None:
     if story_id is None:
         return None
@@ -41,13 +49,15 @@ def _story_seed(story_id) -> int | None:
 
 
 def _build_prompt(scene: str, char_name: str, char_desc: str) -> str:
-    char_part = ""
     if char_name and char_desc:
-        char_part = f"The main character {char_name} looks like this: {char_desc}. "
+        character_clause = f"The main character {char_name} looks like this: {char_desc}. "
     elif char_name:
-        char_part = f"The main character is a child named {char_name}. "
+        character_clause = f"The main character is a child named {char_name}. "
+    else:
+        character_clause = ""
+
     return (
-        f"children's picture book illustration: {char_part}{scene}. "
+        f"children's picture book illustration: {character_clause}{scene}. "
         "Soft watercolor and gouache style, warm pastel colors, "
         "expressive friendly characters, detailed whimsical background, "
         "storybook art, high quality, vibrant, no text, no words, no letters"
@@ -55,32 +65,34 @@ def _build_prompt(scene: str, char_name: str, char_desc: str) -> str:
 
 
 async def _extract_scene(page_text: str) -> str:
-    """Use Groq to pull a tight visual scene from page text."""
+    """Use Groq to extract a concise visual description from page text."""
     try:
         if not USE_FREE_MODE and groq_client:
-            resp = groq_client.chat.completions.create(
+            response = groq_client.chat.completions.create(
                 model="llama-3.1-8b-instant",
-                messages=[{"role": "user", "content": (
-                    "Read this children's story page and write ONE visual scene description "
-                    "(max 40 words) for an illustrator. Describe exactly what is visible: "
-                    "characters, their actions, the setting, key objects. No narration, just visuals.\n\n"
-                    f"Page text:\n{page_text}"
-                )}],
+                messages=[{
+                    "role": "user",
+                    "content": (
+                        "Read this children's story page and write ONE visual scene description "
+                        "(max 40 words) for an illustrator. Describe exactly what is visible: "
+                        "characters, their actions, the setting, key objects. No narration, just visuals.\n\n"
+                        f"Page text:\n{page_text}"
+                    ),
+                }],
                 temperature=0.4,
                 max_tokens=80,
             )
-            scene = resp.choices[0].message.content.strip()
-            print(f"Scene: {scene}")
+            scene = response.choices[0].message.content.strip()
+            print(f"Scene extracted: {scene}")
             return scene
-    except Exception as e:
-        print(f"Scene extract failed: {e}")
+    except Exception as exc:
+        print(f"Scene extraction failed: {exc}")
+
     return ". ".join(page_text.replace("\n", " ").split(". ")[:2])
 
 
-# ── Cloudinary upload ─────────────────────────────────────────────────────────
-
 async def _upload_to_cloudinary(image_source: str, story_id, page_num: int) -> str:
-    """Upload image URL or base64 to Cloudinary. Returns permanent URL."""
+    """Upload an image URL or base64 data URI to Cloudinary. Returns the permanent URL."""
     if not CLOUDINARY_CLOUD_NAME:
         return image_source
     try:
@@ -93,51 +105,58 @@ async def _upload_to_cloudinary(image_source: str, story_id, page_num: int) -> s
                 public_id=public_id,
                 overwrite=True,
                 resource_type="image",
-            )
+            ),
         )
         url = result["secure_url"]
-        print(f"Cloudinary: {url}")
+        print(f"Cloudinary upload: {url}")
         return url
-    except Exception as e:
-        print(f"Cloudinary upload failed, using original: {e}")
+    except Exception as exc:
+        print(f"Cloudinary upload failed, using original source: {exc}")
         return image_source
 
 
-# ── Backends ──────────────────────────────────────────────────────────────────
-
 async def _generate_infip(prompt: str) -> tuple[str, str]:
-    """Ghostbot/infip.pro -- 1000 free images/day, fast 2-5s. Retries once on timeout."""
+    """
+    Generate via infip.pro.
+    Returns (url, 'url'). Retries once on timeout then falls back to HF Inference.
+    """
     if not INFIP_API_KEY:
-        raise HTTPException(status_code=500,
-                            detail="INFIP_API_KEY not set in .env")
+        raise HTTPException(status_code=500, detail="INFIP_API_KEY is not set")
+
     for attempt in range(2):
         try:
-            print(f"Infip request (attempt {attempt + 1})...")
+            print(f"infip request (attempt {attempt + 1})")
             async with httpx.AsyncClient(timeout=90) as client:
-                r = await client.post(
+                response = await client.post(
                     "https://api.infip.pro/v1/images/generations",
-                    headers={"Authorization": f"Bearer {INFIP_API_KEY}",
-                             "Content-Type": "application/json"},
-                    json={"model": "img3", "prompt": prompt, "n": 1,
-                          "size": "1024x1024", "response_format": "url"},
+                    headers={
+                        "Authorization": f"Bearer {INFIP_API_KEY}",
+                        "Content-Type": "application/json",
+                    },
+                    json={"model": "img3", "prompt": prompt, "n": 1, "size": "1024x1024", "response_format": "url"},
                 )
-                if r.status_code != 200:
-                    raise HTTPException(status_code=502,
-                                        detail=f"Infip error {r.status_code}: {r.text[:200]}")
-                img_url = r.json()["data"][0]["url"]
-            print("Infip success")
+                if response.status_code != 200:
+                    raise HTTPException(
+                        status_code=502,
+                        detail=f"infip error {response.status_code}: {response.text[:200]}",
+                    )
+                img_url = response.json()["data"][0]["url"]
+            print("infip success")
             return img_url, "url"
         except httpx.ReadTimeout:
-            print(f"Infip timeout on attempt {attempt + 1}")
+            print(f"infip timeout on attempt {attempt + 1}")
             if attempt == 1:
-                print("Infip failed twice, falling back to HuggingFace inference...")
+                print("infip failed twice — falling back to HuggingFace Inference")
                 return await _generate_inference(prompt)
         except HTTPException:
             raise
 
 
 async def _generate_gradio(prompt: str) -> tuple[str, str]:
-    """Rotate through HuggingFace Gradio spaces."""
+    """
+    Generate via HuggingFace Gradio Spaces.
+    Rotates through GRADIO_SPACES and raises 429 on quota exhaustion.
+    """
     from gradio_client import Client as GradioClient
 
     QUOTA_PHRASES = ["gpu quota", "exceeded your gpu", "quota", "rate limit", "too many requests"]
@@ -145,14 +164,17 @@ async def _generate_gradio(prompt: str) -> tuple[str, str]:
 
     for space in GRADIO_SPACES:
         try:
-            print(f"Gradio: {space}")
+            print(f"Gradio: trying {space}")
 
             def _call(sp=space):
                 gc = GradioClient(sp)
                 try:
                     result, _ = gc.predict(
-                        prompt=prompt, randomize_seed=True,
-                        width=1024, height=1024, num_inference_steps=4,
+                        prompt=prompt,
+                        randomize_seed=True,
+                        width=1024,
+                        height=1024,
+                        num_inference_steps=4,
                         api_name="/infer",
                     )
                 except Exception:
@@ -168,6 +190,7 @@ async def _generate_gradio(prompt: str) -> tuple[str, str]:
 
             raw = None
             img_ext = "jpg"
+
             if isinstance(result, dict):
                 url = result.get("url")
                 path = result.get("path")
@@ -180,58 +203,65 @@ async def _generate_gradio(prompt: str) -> tuple[str, str]:
                     raw = Path(path).read_bytes()
                     img_ext = Path(path).suffix.lstrip(".") or "jpg"
             elif isinstance(result, (list, tuple)):
-                file_path = result[0]
-                raw = Path(file_path).read_bytes()
-                img_ext = Path(file_path).suffix.lstrip(".") or "jpg"
+                raw = Path(result[0]).read_bytes()
+                img_ext = Path(result[0]).suffix.lstrip(".") or "jpg"
             elif isinstance(result, str):
                 raw = Path(result).read_bytes()
                 img_ext = Path(result).suffix.lstrip(".") or "jpg"
 
             if not raw or len(raw) < 1000:
-                raise ValueError("Empty image returned")
+                raise ValueError("Empty or invalid image returned")
 
             print(f"Gradio success via {space}")
             return base64.b64encode(raw).decode("utf-8"), img_ext
 
-        except Exception as e:
-            last_error = e
-            err_str = str(e).lower()
-            if any(phrase in err_str for phrase in QUOTA_PHRASES):
-                print(f"Gradio quota hit on {space} -- stopping.")
-                raise HTTPException(status_code=429,
-                                    detail="Gradio GPU quota exceeded. Try again in ~1 hour.")
-            print(f"Gradio {space} failed: {str(e)[:80]} -- trying next...")
-            continue
+        except Exception as exc:
+            last_error = exc
+            if any(phrase in str(exc).lower() for phrase in QUOTA_PHRASES):
+                print(f"Gradio quota exceeded on {space} — stopping rotation")
+                raise HTTPException(
+                    status_code=429,
+                    detail="Gradio GPU quota exceeded. Try again in ~1 hour.",
+                )
+            print(f"Gradio {space} failed: {str(exc)[:80]} — trying next space")
 
-    raise HTTPException(status_code=502,
-                        detail=f"All Gradio spaces failed. Last: {str(last_error)[:150]}")
+    raise HTTPException(
+        status_code=502,
+        detail=f"All Gradio spaces failed. Last error: {str(last_error)[:150]}",
+    )
 
 
 async def _generate_inference(prompt: str) -> tuple[str, str]:
-    """HuggingFace Inference API -- free monthly credits."""
+    """Generate via HuggingFace Inference API (free monthly credits)."""
     if not HUGGINGFACE_API_KEY:
-        raise HTTPException(status_code=500, detail="HUGGINGFACE_API_KEY not set in .env")
+        raise HTTPException(status_code=500, detail="HUGGINGFACE_API_KEY is not set")
+
     async with httpx.AsyncClient(timeout=60) as client:
-        r = await client.post(
+        response = await client.post(
             "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",
             headers={"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"},
             json={"inputs": prompt},
         )
-        if r.status_code != 200:
-            raise HTTPException(status_code=502,
-                                detail=f"HF Inference error {r.status_code}: {r.text[:200]}")
-    print("HF Inference success")
-    return base64.b64encode(r.content).decode("utf-8"), "jpg"
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=502,
+                detail=f"HuggingFace Inference error {response.status_code}: {response.text[:200]}",
+            )
 
+    print("HuggingFace Inference success")
+    return base64.b64encode(response.content).decode("utf-8"), "jpg"
 
-# ── Main entry point ──────────────────────────────────────────────────────────
 
 async def generate_image(data: dict) -> dict:
     """
-    1. Check disk cache (local only).
-    2. Extract visual scene via Groq.
-    3. Generate image via selected backend.
-    4. Upload to Cloudinary for permanent storage.
+    Generate or retrieve a cached illustration for a story page.
+
+    Pipeline:
+      1. Check database cache (story_id + page_num key).
+      2. Check local disk cache (fallback for older stories).
+      3. Extract a visual scene description via Groq.
+      4. Generate an image using the configured backend.
+      5. Upload to Cloudinary and persist the URL to the database.
     """
     page_text = data.get("text", "")
     story_id  = data.get("story_id")
@@ -240,33 +270,31 @@ async def generate_image(data: dict) -> dict:
     char_desc = data.get("char_desc", "")
 
     if not page_text:
-        raise HTTPException(status_code=400, detail="No text provided")
+        raise HTTPException(status_code=400, detail="No page text provided")
 
-    # 1. Check DB cache first (works both locally and on production)
+    # 1. Database cache
     if story_id and page_num:
         cached_url = get_image_url(story_id, page_num)
         if cached_url:
             print(f"DB cache hit: story {story_id} page {page_num}")
             return {"image": cached_url, "scene_prompt": "cached", "cached": True}
 
-    # 2. Check local disk cache (fallback for older stories)
+    # 2. Local disk cache
     if story_id and page_num and IMAGES_DIR.exists():
         for ext in ("webp", "png", "jpg"):
-            cached = IMAGES_DIR / f"{story_id}_page_{page_num}.{ext}"
-            if cached.exists():
-                img_b64 = base64.b64encode(cached.read_bytes()).decode("utf-8")
+            cached_path = IMAGES_DIR / f"{story_id}_page_{page_num}.{ext}"
+            if cached_path.exists():
+                img_b64 = base64.b64encode(cached_path.read_bytes()).decode("utf-8")
                 print(f"Disk cache hit: story {story_id} page {page_num}")
-                return {"image": f"data:image/{ext};base64,{img_b64}",
-                        "scene_prompt": "cached", "cached": True}
+                return {"image": f"data:image/{ext};base64,{img_b64}", "scene_prompt": "cached", "cached": True}
 
-    # 2. Scene + prompt
+    # 3. Build image prompt
     scene  = await _extract_scene(page_text)
     prompt = _build_prompt(scene, char_name, char_desc)
-    seed   = _story_seed(story_id)
 
-    print(f"Image mode: {IMAGE_MODE}")
+    print(f"Generating image via: {IMAGE_MODE}")
 
-    # 3. Generate
+    # 4. Generate
     if IMAGE_MODE == "infip":
         result, result_type = await _generate_infip(prompt)
     elif IMAGE_MODE == "gradio":
@@ -274,33 +302,33 @@ async def generate_image(data: dict) -> dict:
     elif IMAGE_MODE == "inference":
         result, result_type = await _generate_inference(prompt)
     else:
-        raise HTTPException(status_code=500,
-                            detail=f"Unknown IMAGE_MODE '{IMAGE_MODE}'")
+        raise HTTPException(status_code=500, detail=f"Unknown IMAGE_MODE: '{IMAGE_MODE}'")
 
-    # 4. Upload to Cloudinary for permanent storage, then save URL to DB
+    # 5. Upload to Cloudinary and persist
     if result_type == "url":
-        permanent = await _upload_to_cloudinary(result, story_id, page_num)
+        permanent_url = await _upload_to_cloudinary(result, story_id, page_num)
         if story_id and page_num:
-            save_image_url(story_id, page_num, permanent)
-        return {"image": permanent, "scene_prompt": scene,
-                "backend": IMAGE_MODE, "cached": False}
-    else:
-        img_b64 = result
-        img_ext = result_type
-        data_uri = f"data:image/{img_ext};base64,{img_b64}"
-        permanent = await _upload_to_cloudinary(data_uri, story_id, page_num)
-        if permanent != data_uri:
-            if story_id and page_num:
-                save_image_url(story_id, page_num, permanent)
-            return {"image": permanent, "scene_prompt": scene,
-                    "backend": IMAGE_MODE, "cached": False}
-        # No Cloudinary -- save locally
-        try:
-            if story_id and page_num:
-                save_path = IMAGES_DIR / f"{story_id}_page_{page_num}.{img_ext}"
-                save_path.write_bytes(base64.b64decode(img_b64))
-                print(f"Saved locally: {save_path}")
-        except Exception as e:
-            print(f"Local save failed: {e}")
-        return {"image": data_uri, "scene_prompt": scene,
-                "backend": IMAGE_MODE, "cached": False}
+            save_image_url(story_id, page_num, permanent_url)
+        return {"image": permanent_url, "scene_prompt": scene, "backend": IMAGE_MODE, "cached": False}
+
+    # Base64 result
+    img_b64  = result
+    img_ext  = result_type
+    data_uri = f"data:image/{img_ext};base64,{img_b64}"
+
+    permanent_url = await _upload_to_cloudinary(data_uri, story_id, page_num)
+    if permanent_url != data_uri:
+        if story_id and page_num:
+            save_image_url(story_id, page_num, permanent_url)
+        return {"image": permanent_url, "scene_prompt": scene, "backend": IMAGE_MODE, "cached": False}
+
+    # Cloudinary not configured — save to local disk
+    try:
+        if story_id and page_num:
+            save_path = IMAGES_DIR / f"{story_id}_page_{page_num}.{img_ext}"
+            save_path.write_bytes(base64.b64decode(img_b64))
+            print(f"Saved locally: {save_path}")
+    except Exception as exc:
+        print(f"Local save failed: {exc}")
+
+    return {"image": data_uri, "scene_prompt": scene, "backend": IMAGE_MODE, "cached": False}

@@ -1,6 +1,7 @@
 """
-routes/images.py — Image generation and serving endpoints
+Image generation and serving routes.
 """
+
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
 
@@ -12,7 +13,7 @@ router = APIRouter()
 
 @router.get("/story-image/{story_id}/{page}")
 async def serve_story_image(story_id: int, page: int):
-    """Serve a cached story page image from disk."""
+    """Serve a cached story page image from the local filesystem."""
     for ext in ("webp", "png", "jpg"):
         path = IMAGES_DIR / f"{story_id}_page_{page}.{ext}"
         if path.exists():
@@ -22,5 +23,5 @@ async def serve_story_image(story_id: int, page: int):
 
 @router.post("/generate-image")
 async def generate_image(data: dict):
-    """Generate an image for a story page (with disk cache + character consistency)."""
+    """Generate an illustration for a story page."""
     return await _generate_image(data)

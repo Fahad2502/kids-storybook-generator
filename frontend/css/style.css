@@ -737,13 +737,14 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
 }
 
 .page-text {
-    font-size: 1.5rem;
-    line-height: 2;
-    color: #2d1a47;
-    text-align: center;
-    max-width: 700px;
-    padding: 20px;
-    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 1.9;
+    color: #1a1035;
+    text-align: left;
+    max-width: 100%;
+    padding: 20px 30px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 /* Navigation Styles */
@@ -1012,13 +1013,14 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
 }
 
 .page-text {
-    font-size: 1.5rem;
-    line-height: 2;
-    color: #2d1a47;
-    text-align: center;
-    max-width: 700px;
-    padding: 20px;
-    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 1.9;
+    color: #1a1035;
+    text-align: left;
+    max-width: 100%;
+    padding: 20px 30px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 /* Start Reading Button */
@@ -1110,8 +1112,9 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
     }
 
     .page-text {
-        font-size: 1.2rem;
-        line-height: 1.8;
+        font-size: 1.1rem;
+        line-height: 1.75;
+        padding: 15px 20px;
     }
 
     .book-page {
