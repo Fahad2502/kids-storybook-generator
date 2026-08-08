@@ -1,6 +1,8 @@
 fastapi>=0.100.0
 uvicorn[standard]>=0.20.0
 python-dotenv>=1.0.0
+pydantic>=2.0.0
+python-multipart>=0.0.6
 requests>=2.30.0
 httpx>=0.24.0
 groq>=0.4.0
@@ -10,3 +12,4 @@ cloudinary>=1.36.0
 Pillow>=9.0.0
 python-jose[cryptography]>=3.3.0
 bcrypt>=4.0.0
+textstat>=0.7.0
