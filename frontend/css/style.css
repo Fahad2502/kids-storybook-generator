@@ -1,4 +1,4 @@
-﻿/* ========================================
+/* ========================================
    KIDS STORY GENERATOR - MAIN STYLES
    VERSION: 4.0 - OLD UI COMPLETELY REMOVED
    Last Updated: Removed ALL old conflicting book styles
@@ -302,7 +302,7 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
 /* OLD BOOK COVER STYLES REMOVED - Using new test book UI styles instead */
 
 .book-content-wrapper {
-    background: #fdf9f3 url('../img/paper-texture.jpg');
+    background: #fefcf7;
     border: 1px solid #d4af37;
     box-shadow: inset 0 0 8px rgba(0,0,0,0.04), 0 4px 15px rgba(0,0,0,0.1);
     border-radius: 8px; padding: 2.5rem; width: 95%; height: 95%;
@@ -692,10 +692,8 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
 
 /* Story Page with Paper Texture */
 .story-page {
-    background-image: url('../img/paper-texture.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: #fefcf7;
+    background-image: none;
 }
 
 .page-image {
@@ -725,12 +723,11 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
 .page-text {
     font-size: 1.4rem;
     line-height: 1.9;
-    color: #1a1035;
-    text-align: left;
-    max-width: 100%;
+    color: #1a0a00 !important;
+    font-weight: 700 !important;
+    font-family: Georgia, serif;
     padding: 20px 30px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
+    max-width: 100%;
 }
 
 /* Navigation Styles */
@@ -796,9 +793,14 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
     }
 
     .page-text {
-        font-size: 1.2rem;
-        line-height: 1.8;
-    }
+    font-size: 1.4rem;
+    line-height: 1.9;
+    color: #1a0a00 !important;
+    font-weight: 700 !important;
+    font-family: Georgia, serif;
+    padding: 20px 30px;
+    max-width: 100%;
+}
 
     .book-page {
         padding: 20px;
@@ -969,10 +971,8 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
 
 /* Story Page with Paper Texture */
 .story-page {
-    background-image: url('../img/paper-texture.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background: #fefcf7;
+    background-image: none;
 }
 
 .page-image {
@@ -1002,12 +1002,11 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
 .page-text {
     font-size: 1.4rem;
     line-height: 1.9;
-    color: #1a1035;
-    text-align: left;
-    max-width: 100%;
+    color: #1a0a00 !important;
+    font-weight: 700 !important;
+    font-family: Georgia, serif;
     padding: 20px 30px;
-    font-weight: 600;
-    letter-spacing: 0.01em;
+    max-width: 100%;
 }
 
 /* Start Reading Button */
@@ -1099,10 +1098,14 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
     }
 
     .page-text {
-        font-size: 1.1rem;
-        line-height: 1.75;
-        padding: 15px 20px;
-    }
+    font-size: 1.4rem;
+    line-height: 1.9;
+    color: #1a0a00 !important;
+    font-weight: 700 !important;
+    font-family: Georgia, serif;
+    padding: 20px 30px;
+    max-width: 100%;
+}
 
     .book-page {
         padding: 20px;
@@ -1115,7 +1118,7 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
     }
 }
 
-/* ── Toast Notifications ─────────────────────────────────────────────────── */
+/* -- Toast Notifications --------------------------------------------------- */
 #toast-container {
     position: fixed;
     bottom: 24px;
@@ -1164,7 +1167,7 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
     to   { opacity: 0; transform: translateX(60px) scale(0.9); }
 }
 
-/* ── Skeleton Loaders ────────────────────────────────────────────────────── */
+/* -- Skeleton Loaders ------------------------------------------------------ */
 .skeleton {
     background: linear-gradient(90deg,
         rgba(255,255,255,0.06) 25%,
@@ -1190,7 +1193,7 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
     gap: 12px;
 }
 
-/* ── Section Fade Transitions ────────────────────────────────────────────── */
+/* -- Section Fade Transitions ---------------------------------------------- */
 .section-fade {
     animation: sectionFadeIn 0.35s ease-out;
 }

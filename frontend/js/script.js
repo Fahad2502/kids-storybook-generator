@@ -392,36 +392,20 @@ function setupNavigation() {
 
 // Show specific section
 function showSection(sectionId) {
-    log.info('🔄 showSection called with:', sectionId);
-    
-    // Hide all sections
     const sections = ['home', 'create', 'gallery', 'favorites', 'register', 'login', 'storyView', 'about', 'auth'];
     sections.forEach(id => {
         const section = document.getElementById(id);
-        if (section) {
-            section.classList.add('section-hidden');
-            log.info('  ➖ Hiding section:', id);
-        }
+        if (section) section.classList.add('section-hidden');
     });
-    
-    // Show the requested section
+
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
         targetSection.classList.remove('section-hidden');
-        targetSection.classList.remove('section-fade');
-        void targetSection.offsetWidth; // force reflow
         targetSection.classList.add('section-fade');
-        log.info('  ✅ Showing section:', sectionId);
-        
-        // Scroll to top of the section
-        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-        log.error('  ❌ Section not found:', sectionId);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    
-    // Update navigation active state
-    const navLinks = document.querySelectorAll('nav a');
-    navLinks.forEach(link => {
+
+    document.querySelectorAll('nav a').forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${sectionId}`) {
             link.classList.add('active');
