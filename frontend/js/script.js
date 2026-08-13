@@ -1312,11 +1312,18 @@ async function generatePageImage(page, storyId, charName, charDesc) {
                 const blob = await cacheRes.blob();
                 const url = URL.createObjectURL(blob);
                 if (img) {
-                    img.src = url;
+                    img.onerror = () => {
+                        if (placeholder) placeholder.innerHTML = '❌ Image failed to display';
+                    };
                     img.onload = () => {
                         img.style.display = 'block';
                         if (placeholder) placeholder.style.display = 'none';
                     };
+                    img.src = url;
+                    if (img.complete && img.naturalWidth > 0) {
+                        img.style.display = 'block';
+                        if (placeholder) placeholder.style.display = 'none';
+                    }
                 }
                 log.info(`💾 Page ${page.page_number}: loaded from disk cache`);
                 return;
@@ -1367,11 +1374,20 @@ async function generatePageImage(page, storyId, charName, charDesc) {
         log.info(`✅ Page ${page.page_number}: generated via ${data.backend}`);
 
         if (img) {
-            img.src = data.image;
+            img.onerror = () => {
+                log.warn(`Image load error for page ${page.page_number}`);
+                if (placeholder) placeholder.innerHTML = '❌ Image failed to display';
+            };
             img.onload = () => {
                 img.style.display = 'block';
                 if (placeholder) placeholder.style.display = 'none';
             };
+            img.src = data.image;
+            // If already loaded (cached by browser), onload may not fire — force it
+            if (img.complete && img.naturalWidth > 0) {
+                img.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+            }
         }
     } catch (e) {
         if (e.name === 'AbortError') {
