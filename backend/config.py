@@ -27,8 +27,8 @@ if not USE_FREE_MODE:
         groq_client = Groq(api_key=GROQ_API_KEY)
 
 # Image generation
-# Accepted values: infip | gradio | inference
-IMAGE_MODE: str = os.getenv("IMAGE_MODE", "infip").lower()
+# Accepted values: pollinations | infip | gradio | inference
+IMAGE_MODE: str = os.getenv("IMAGE_MODE", "pollinations").lower()
 
 HUGGINGFACE_API_KEY: str = os.getenv("HUGGINGFACE_API_KEY", "")
 INFIP_API_KEY: str = os.getenv("INFIP_API_KEY", "")

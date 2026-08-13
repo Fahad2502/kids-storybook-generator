@@ -2,9 +2,10 @@
 Image generation service.
 
 Supported backends (configured via IMAGE_MODE in .env):
-  infip     - infip.pro, up to 1000 free images/day, ~2-5s per image (default)
-  gradio    - HuggingFace Gradio Spaces, free with hourly GPU quota
-  inference - HuggingFace Inference API, free monthly credits
+  pollinations - pollinations.ai, completely free, no key, no quota (default)
+  infip        - infip.pro, up to 1000 free images/day, ~2-5s per image
+  gradio       - HuggingFace Gradio Spaces, free with hourly GPU quota
+  inference    - HuggingFace Inference API, free monthly credits
 
 Generated images are uploaded to Cloudinary for permanent storage.
 """
@@ -12,6 +13,7 @@ Generated images are uploaded to Cloudinary for permanent storage.
 import asyncio
 import base64
 import hashlib
+import urllib.parse
 import httpx
 from pathlib import Path
 
@@ -115,10 +117,38 @@ async def _upload_to_cloudinary(image_source: str, story_id, page_num: int) -> s
         return image_source
 
 
+async def _generate_pollinations(prompt: str, seed: int | None = None) -> tuple[str, str]:
+    """
+    Generate via pollinations.ai — completely free, no API key, no quota.
+    Returns a JPEG image as base64.
+    Tries flux model first, falls back to turbo on failure.
+    """
+    encoded = urllib.parse.quote(prompt)
+    seed_param = f"&seed={seed}" if seed is not None else ""
+
+    for model in ("flux", "turbo"):
+        url = (
+            f"https://image.pollinations.ai/prompt/{encoded}"
+            f"?width=768&height=768&model={model}&nologo=true{seed_param}"
+        )
+        try:
+            print(f"Pollinations ({model})...")
+            async with httpx.AsyncClient(timeout=90, follow_redirects=True) as client:
+                response = await client.get(url)
+            if response.status_code == 200 and len(response.content) > 5000:
+                print(f"Pollinations success ({model})")
+                return base64.b64encode(response.content).decode("utf-8"), "jpg"
+            print(f"Pollinations {model} bad response: {response.status_code} {len(response.content)} bytes")
+        except Exception as exc:
+            print(f"Pollinations {model} failed: {str(exc)[:80]}")
+
+    raise HTTPException(status_code=502, detail="Pollinations.ai failed on both flux and turbo models")
+
+
 async def _generate_infip(prompt: str) -> tuple[str, str]:
     """
     Generate via infip.pro.
-    Returns (url, 'url'). Retries once on timeout then falls back to HF Inference.
+    Returns (url, 'url'). Retries once on timeout then falls back to pollinations.
     """
     if not INFIP_API_KEY:
         raise HTTPException(status_code=500, detail="INFIP_API_KEY is not set")
@@ -146,8 +176,8 @@ async def _generate_infip(prompt: str) -> tuple[str, str]:
         except httpx.ReadTimeout:
             print(f"infip timeout on attempt {attempt + 1}")
             if attempt == 1:
-                print("infip failed twice — falling back to HuggingFace Inference")
-                return await _generate_inference(prompt)
+                print("infip failed twice — falling back to Pollinations")
+                return await _generate_pollinations(prompt)
         except HTTPException:
             raise
 
@@ -257,11 +287,11 @@ async def generate_image(data: dict) -> dict:
     Generate or retrieve a cached illustration for a story page.
 
     Pipeline:
-      1. Check database cache (story_id + page_num key).
-      2. Check local disk cache (fallback for older stories).
-      3. Extract a visual scene description via Groq.
-      4. Generate an image using the configured backend.
-      5. Upload to Cloudinary and persist the URL to the database.
+      1. Check database cache.
+      2. Check local disk cache.
+      3. Extract visual scene via Groq.
+      4. Generate image via configured backend.
+      5. Upload to Cloudinary and persist URL.
     """
     page_text = data.get("text", "")
     story_id  = data.get("story_id")
@@ -291,11 +321,14 @@ async def generate_image(data: dict) -> dict:
     # 3. Build image prompt
     scene  = await _extract_scene(page_text)
     prompt = _build_prompt(scene, char_name, char_desc)
+    seed   = _story_seed(story_id)
 
     print(f"Generating image via: {IMAGE_MODE}")
 
     # 4. Generate
-    if IMAGE_MODE == "infip":
+    if IMAGE_MODE == "pollinations":
+        result, result_type = await _generate_pollinations(prompt, seed)
+    elif IMAGE_MODE == "infip":
         result, result_type = await _generate_infip(prompt)
     elif IMAGE_MODE == "gradio":
         result, result_type = await _generate_gradio(prompt)
