@@ -1139,7 +1139,7 @@ function displayStory(storyData) {
                 <div id="page${page.page_number}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: #fdf6e3; overflow: hidden;">
                     <div style="position: absolute; top: 12px; right: 22px; font-size: 1rem; color: #8b6f47; font-weight: 700; opacity: 0.6;">${page.page_number}</div>
                     <div style="max-width: 700px; padding: 50px 60px; text-align: center;">
-                        <div style="font-size: 1.15rem; line-height: 2; color: #3d2b1f; font-weight: 500; white-space: pre-line;">${page.text}</div>
+                        <div style="font-size: 1.15rem; line-height: 2; color: #1a0f0a; font-weight: 700; white-space: pre-line;">${page.text}</div>
                     </div>
                 </div>
             `;
