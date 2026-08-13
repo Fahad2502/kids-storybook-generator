@@ -69,7 +69,7 @@ async def _extract_scene(page_text: str) -> str:
     try:
         if not USE_FREE_MODE and groq_client:
             response = groq_client.chat.completions.create(
-                model="llama-3.1-8b-instant",
+                model="gpt-oss-20b",
                 messages=[{
                     "role": "user",
                     "content": (
@@ -238,7 +238,7 @@ async def _generate_inference(prompt: str) -> tuple[str, str]:
 
     async with httpx.AsyncClient(timeout=60) as client:
         response = await client.post(
-            "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell",
+            "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell",
             headers={"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"},
             json={"inputs": prompt},
         )

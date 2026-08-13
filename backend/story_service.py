@@ -238,7 +238,7 @@ async def generate_ai_story(request: StoryRequest) -> dict:
         # Step 1 — prose generation
         story_text = None
         last_error = None
-        for model_name in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]:
+        for model_name in ["llama-3.3-70b-versatile", "gpt-oss-20b"]:
             try:
                 print(f"Step 1: prose via {model_name}")
                 chat = groq_client.chat.completions.create(
@@ -283,7 +283,7 @@ async def generate_ai_story(request: StoryRequest) -> dict:
         )
 
         response = None
-        for model_name in ["llama-3.3-70b-versatile", "llama-3.1-8b-instant"]:
+        for model_name in ["llama-3.3-70b-versatile", "gpt-oss-20b"]:
             try:
                 print(f"Step 2: JSON format via {model_name}")
                 chat = groq_client.chat.completions.create(
@@ -325,7 +325,7 @@ async def generate_ai_story(request: StoryRequest) -> dict:
         char_desc = f"{request.age}-year-old child"
         try:
             desc_response = groq_client.chat.completions.create(
-                model="llama-3.1-8b-instant",
+                model="gpt-oss-20b",
                 messages=[{
                     "role": "user",
                     "content": (
