@@ -58,9 +58,8 @@ def _build_prompt(scene: str, char_name: str, char_desc: str) -> str:
 
     return (
         f"children's picture book illustration: {character_clause}{scene}. "
-        "Soft watercolor and gouache style, warm pastel colors, "
-        "expressive friendly characters, detailed whimsical background, "
-        "storybook art, high quality, vibrant, no text, no words, no letters"
+        "Digital art, vibrant colors, expressive characters, detailed background, "
+        "high quality storybook illustration, no text, no words, no letters"
     )
 
 
@@ -73,14 +72,15 @@ async def _extract_scene(page_text: str) -> str:
                 messages=[{
                     "role": "user",
                     "content": (
-                        "Read this children's story page and write ONE visual scene description "
-                        "(max 40 words) for an illustrator. Describe exactly what is visible: "
-                        "characters, their actions, the setting, key objects. No narration, just visuals.\n\n"
+                        "Read this children's story page. Write ONE specific visual scene description "
+                        "(max 45 words) for an illustrator. Include: who is in the scene, what they are doing, "
+                        "the exact location/setting, time of day, key objects, and emotions shown through body language. "
+                        "Be very specific — avoid generic descriptions like 'a child in a forest'.\n\n"
                         f"Page text:\n{page_text}"
                     ),
                 }],
-                temperature=0.4,
-                max_tokens=80,
+                temperature=0.3,
+                max_tokens=90,
             )
             scene = response.choices[0].message.content.strip()
             print(f"Scene extracted: {scene}")

@@ -1,6 +1,7 @@
 // API Base URL - auto-detects local vs production
+const LOCAL_PORT = window.location.port || '8025';
 const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:8025'
+    ? `http://localhost:${LOCAL_PORT}`
     : window.location.origin;
 
 // ── Logger — silent in production, active in development ─────────────────────
@@ -1178,7 +1179,7 @@ function displayStory(storyData) {
                             <!-- spine crease highlight line -->
                             <div style="position: absolute; left: 2px; top: 0; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.18) 30%, rgba(255,255,255,0.18) 70%, transparent); z-index: 3;"></div>
                             <div style="position: absolute; top: 14px; right: 18px; font-size: 0.95rem; color: #8b6f47; font-weight: 700; opacity: 0.55; z-index: 4;">${page.page_number}</div>
-                            <p style="font-size: clamp(0.85rem, 1.1vw, 1.1rem); line-height: 1.75; color: #3d2b1f; font-weight: 500; margin: 0; position: relative; z-index: 1; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 14;">${page.text}</p>
+                            <p style="font-size: clamp(0.9rem, 1.15vw, 1.15rem); line-height: 1.85; color: #1a0f0a; font-weight: 700; margin: 0; position: relative; z-index: 1; text-shadow: 0 0 1px rgba(0,0,0,0.08); overflow-y: auto; max-height: 520px;">${page.text}</p>
                         </div>
                     </div>
                 </div>
