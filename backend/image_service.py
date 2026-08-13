@@ -68,7 +68,7 @@ async def _extract_scene(page_text: str) -> str:
     try:
         if not USE_FREE_MODE and groq_client:
             response = groq_client.chat.completions.create(
-                model="gpt-oss-20b",
+                model="openai/gpt-oss-20b",
                 messages=[{
                     "role": "user",
                     "content": (

@@ -1136,10 +1136,10 @@ function displayStory(storyData) {
         if (isLessonPage) {
             // Lesson page — full-width cream paper, centered text
             bookHTML += `
-                <div id="page${page.page_number}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: #fdf6e3; overflow: hidden;">
+                <div id="page${page.page_number}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; align-items: center; justify-content: center; background: #fefcf7; overflow: hidden;">
                     <div style="position: absolute; top: 12px; right: 22px; font-size: 1rem; color: #8b6f47; font-weight: 700; opacity: 0.6;">${page.page_number}</div>
                     <div style="max-width: 700px; padding: 50px 60px; text-align: center;">
-                        <div style="font-size: 1.15rem; line-height: 2; color: #1a0f0a; font-weight: 700; white-space: pre-line;">${page.text}</div>
+                        <div style="font-size: 1.2rem; line-height: 2; color: #1a0a00; font-weight: 700; white-space: pre-line; font-family: Georgia, serif;">${page.text}</div>
                     </div>
                 </div>
             `;
@@ -1173,13 +1173,13 @@ function displayStory(storyData) {
                             <div style="position: absolute; right: 0; top: 0; width: 40px; height: 100%; background: linear-gradient(to right, transparent 0%, rgba(0,0,0,0.25) 70%, rgba(0,0,0,0.55) 100%); z-index: 2;"></div>
                         </div>
                         <!-- Right page: cream paper -->
-                        <div style="flex: 1; background: #fdf6e3; background-image: url('img/paper-texture.jpg'); background-size: cover; display: flex; flex-direction: column; justify-content: center; padding: 44px 40px 44px 50px; position: relative; overflow: hidden;">
+                        <div style="flex: 1; background: #fefcf7; display: flex; flex-direction: column; justify-content: center; padding: 44px 40px 44px 50px; position: relative; overflow: hidden;">
                             <!-- deep spine shadow — left edge of right page -->
                             <div style="position: absolute; left: 0; top: 0; width: 40px; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.18) 50%, transparent 100%); z-index: 2;"></div>
                             <!-- spine crease highlight line -->
                             <div style="position: absolute; left: 2px; top: 0; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.18) 30%, rgba(255,255,255,0.18) 70%, transparent); z-index: 3;"></div>
                             <div style="position: absolute; top: 14px; right: 18px; font-size: 0.95rem; color: #8b6f47; font-weight: 700; opacity: 0.55; z-index: 4;">${page.page_number}</div>
-                            <p style="font-size: clamp(0.9rem, 1.15vw, 1.15rem); line-height: 1.85; color: #1a0f0a; font-weight: 700; margin: 0; position: relative; z-index: 1; text-shadow: 0 0 1px rgba(0,0,0,0.08); overflow-y: auto; max-height: 520px;">${page.text}</p>
+                            <p style="font-size: clamp(0.95rem, 1.2vw, 1.2rem); line-height: 1.9; color: #1a0a00; font-weight: 700; margin: 0; position: relative; z-index: 1; overflow-y: auto; max-height: 520px; font-family: Georgia, serif;">${page.text}</p>
                         </div>
                     </div>
                 </div>
