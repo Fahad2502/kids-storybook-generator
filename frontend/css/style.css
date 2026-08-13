@@ -51,21 +51,16 @@ body {
 .sparkle {
     position: absolute;
     bottom: -50px;
-    background: linear-gradient(135deg, #06b6d4, #fbbf24); /* Cyan to gold gradient */
+    background: linear-gradient(135deg, #06b6d4, #fbbf24);
     border-radius: 50%;
     animation: floatBubble 15s linear infinite;
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5), 0 0 30px rgba(251, 191, 36, 0.3); /* Glowing effect */
+    will-change: transform, opacity;
+    transform: translateZ(0);
 }
-.sparkle:nth-child(1) { left: 10%; width: 50px; height: 50px; animation-duration: 18s; animation-delay: 0s; }
-.sparkle:nth-child(2) { left: 20%; width: 30px; height: 30px; animation-duration: 12s; animation-delay: 1s; }
-.sparkle:nth-child(3) { left: 30%; width: 60px; height: 60px; animation-duration: 15s; animation-delay: 2s; }
-.sparkle:nth-child(4) { left: 40%; width: 35px; height: 35px; animation-duration: 20s; animation-delay: 3s; }
-.sparkle:nth-child(5) { left: 50%; width: 45px; height: 45px; animation-duration: 16s; animation-delay: 0s; }
-.sparkle:nth-child(6) { left: 60%; width: 55px; height: 55px; animation-duration: 19s; animation-delay: 5s; }
-.sparkle:nth-child(7) { left: 70%; width: 40px; height: 40px; animation-duration: 13s; animation-delay: 2s; }
-.sparkle:nth-child(8) { left: 80%; width: 30px; height: 30px; animation-duration: 17s; animation-delay: 4s; }
-.sparkle:nth-child(9) { left: 90%; width: 50px; height: 50px; animation-duration: 15s; animation-delay: 1s; }
-.sparkle:nth-child(10) { left: 95%; width: 35px; height: 35px; animation-duration: 18s; animation-delay: 3s; }
+.sparkle:nth-child(1) { left: 15%; width: 40px; height: 40px; animation-duration: 18s; animation-delay: 0s; }
+.sparkle:nth-child(2) { left: 40%; width: 25px; height: 25px; animation-duration: 14s; animation-delay: 4s; }
+.sparkle:nth-child(3) { left: 65%; width: 35px; height: 35px; animation-duration: 20s; animation-delay: 8s; }
+.sparkle:nth-child(4) { left: 85%; width: 20px; height: 20px; animation-duration: 16s; animation-delay: 2s; }
 
 /* --- Other Animations --- */
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -106,7 +101,6 @@ nav a:hover { color: #06b6d4; }
 .btn-primary {
     background: linear-gradient(135deg, #06b6d4, #14b8a6); color: #141b2d;
     box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
-    animation: glow-pulse 3s ease-in-out infinite;
 }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(6, 182, 212, 0.5); }
 .btn-secondary {
@@ -173,7 +167,7 @@ nav a:hover { color: #06b6d4; }
 }
 .hero-content p { font-size: 1.25rem; color: #94a5bd; margin-bottom: 2rem; }
 .hero-buttons { display: flex; gap: 1rem; }
-.hero-image { position: relative; animation: float 6s ease-in-out infinite; }
+.hero-image { position: relative; animation: float 6s ease-in-out infinite; will-change: transform; }
 .hero-image img { width: 100%; height: auto; border-radius: 2rem; box-shadow: 0 20px 60px rgba(6, 182, 212, 0.2); }
 
 /* --- Story Creator Section (DARK THEME) --- */
@@ -853,11 +847,12 @@ footer { background: #141b2d; color: #94a5bd; padding: 3rem 2rem 1rem; margin-to
 /* Book Opening Animation */
 .animated-book-container {
     perspective: 2000px;
+    contain: layout style;
 }
 
 .book-opening {
     transform-style: preserve-3d;
-    animation: bookOpen 1s ease-out;
+    animation: bookOpen 0.6s ease-out;
 }
 
 @keyframes bookOpen {
